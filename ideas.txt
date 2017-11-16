@@ -1,0 +1,10 @@
+* use ML system results as input for CV algorithm
+* extract features using CV algorithms
+* use surrounding mask for feature extraction
+* 
+
+
+-intertesting papers :
+ https://doi.org/10.1007/978-3-642-15567-3_16
+ PMLR 32(1):647-655, 2014.
+ doi.org/10.1016/j.isprsjprs.2017.05.002 
