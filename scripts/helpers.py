@@ -1,71 +1,33 @@
+#!/usr/bin/env python3
+
 import numpy as np
 import matplotlib.image as mpimg
-from PIL import Image
+from tf_aerial_images import *
+import pandas as pd
+
+# each patch is 16*16 pixels
+patch_size = 16
+
+def load_images(n=100):
+    """ 
+    Loads n training images (n=100 loads all the images) both the input images.
+    and the groundtruth images. Returns the two list of images. """
+    n = min(n, 100) 
+    print("Loading " + str(n) + " images")
+    
+    root_dir = "../dataset/training/"
+    
+    image_dir = root_dir + "images/"
+    images = os.listdir(image_dir)
+    
+    gt_image_dir = root_dir + "groundtruth/"
+    gt_images = os.listdir(gt_image_dir)
+    
+    return [load_image(image_dir + images[i]) for i in range(n)], [load_image(gt_image_dir + gt_images[i]) for i in range(n)]
 
 def load_image(infilename):
     data = mpimg.imread(infilename)
     return data
-
-def img_float_to_uint8(img):
-    rimg = img - np.min(img)
-    rimg = (rimg / np.max(rimg) * 255).round().astype(np.uint8)
-    return rimg
-
-# Concatenate an image and its groundtruth
-def concatenate_images(img, gt_img):
-    if len(gt_img.shape) == 3:
-        cimg = np.concatenate((img, gt_img), axis=1)
-    else:
-        w = gt_img.shape[0]
-        h = gt_img.shape[1]
-        gt_img_3c = np.zeros((w, h, 3), dtype=np.uint8)
-        gt_img8 = img_float_to_uint8(gt_img)          
-        gt_img_3c[:,:,0] = gt_img8
-        gt_img_3c[:,:,1] = gt_img8
-        gt_img_3c[:,:,2] = gt_img8
-        img8 = img_float_to_uint8(img)
-        cimg = np.concatenate((img8, gt_img_3c), axis=1)
-    return cimg
-
-def img_crop(im, w, h):
-    list_patches = []
-    imgwidth = im.shape[0]
-    imgheight = im.shape[1]
-    is_2d = len(im.shape) < 3
-    for i in range(0,imgheight,h):
-        for j in range(0,imgwidth,w):
-            if is_2d:
-                im_patch = im[j:j+w, i:i+h]
-            else:
-                im_patch = im[j:j+w, i:i+h, :]
-            list_patches.append(im_patch)
-    return list_patches
-
-def label_to_img(imgwidth, imgheight, w, h, labels):
-    im = np.zeros([imgwidth, imgheight])
-    idx = 0
-    for i in range(0,imgheight,h):
-        for j in range(0,imgwidth,w):
-            im[j:j+w, i:i+h] = labels[idx]
-            idx = idx + 1
-    return im
-
-def make_img_overlay(img, predicted_img):
-    w = img.shape[0]
-    h = img.shape[1]
-    color_mask = np.zeros((w, h, 3), dtype=np.uint8)
-    color_mask[:,:,0] = predicted_img*255
-
-    img8 = img_float_to_uint8(img)
-    background = Image.fromarray(img8, 'RGB').convert("RGBA")
-    overlay = Image.fromarray(color_mask, 'RGB').convert("RGBA")
-    new_img = Image.blend(background, overlay, 0.2)
-    return new_img
-
-# each patch is 16*16 pixels
-patch_size = 16
-# percentage of pixels > 1 required to assign a foreground label to a patch
-foreground_threshold = 0.25 
 
 # Extract 6-dimensional features consisting of average RGB color as well as variance
 def extract_features(img_patch):
@@ -97,5 +59,28 @@ def img_to_inputs(img):
 def img_to_outputs(img):
     """ Given a groundtruth image, splits it into patches and 
     convert each patch into either 0 (background) or 1 (road) """
-    Y = [int(np.mean(patch)>foreground_threshold) for patch in img_crop(img, patch_size, patch_size)]
+    Y = [int(value_to_class(np.mean(patch))) for patch in img_crop(img, patch_size, patch_size)]
     return Y
+
+def confusion_matrix(predictions, correct):
+    """ Compute the confusion matrix out of the given predictions and correct labels """
+    Z = predictions
+    Y = correct
+    
+    FNR = np.sum((Z == 0) & (Y == 1)) / float(len(Z))
+    TNR = np.sum((Z == 0) & (Y == 0)) / float(len(Z))
+
+    FPR = np.sum((Z == 1) & (Y == 0)) / float(len(Z))
+    TPR = np.sum((Z == 1) & (Y == 1)) / float(len(Z))
+    
+    confmat = pd.DataFrame(
+        data = [[TNR, FNR], [FPR, TPR]],
+        index = pd.MultiIndex(
+            levels=[['predicted (Z)'], ['0', '1']],
+            labels=[[0, 0], [0, 1]]),
+        columns = pd.MultiIndex(
+            levels=[['actual (Y)'], ['0 (background)', '1 (road)']],
+            labels=[[0, 0], [0, 1]]),
+    )
+    
+    return confmat

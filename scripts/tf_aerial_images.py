@@ -5,8 +5,6 @@ This simple baseline consits of a CNN with two convolutional+pooling layers with
 Credits: Aurelien Lucchi, ETH Zürich
 """
 
-
-
 import gzip
 import os
 import sys
@@ -57,10 +55,11 @@ def img_crop(im, w, h):
             list_patches.append(im_patch)
     return list_patches
 
+"""
 def extract_data(filename, num_images):
-    """Extract the images into a 4D tensor [image index, y, x, channels].
+    """"""Extract the images into a 4D tensor [image index, y, x, channels].
     Values are rescaled from [0, 255] down to [-0.5, 0.5].
-    """
+    """"""
     imgs = []
     for i in range(1, num_images+1):
         imageid = "satImage_%.3d" % i
@@ -80,16 +79,16 @@ def extract_data(filename, num_images):
     img_patches = [img_crop(imgs[i], IMG_PATCH_SIZE, IMG_PATCH_SIZE) for i in range(num_images)]
     data = [img_patches[i][j] for i in range(len(img_patches)) for j in range(len(img_patches[i]))]
 
-    return numpy.asarray(data)
+    return numpy.asarray(data)"""
         
 # Assign a label to a patch v
 def value_to_class(v):
     foreground_threshold = 0.25 # percentage of pixels > 1 required to assign a foreground label to a patch
     df = numpy.sum(v)
     if df > foreground_threshold:
-        return [0, 1]
+        return 1
     else:
-        return [1, 0]
+        return 0
 
 # Extract label images
 def extract_labels(filename, num_images):
@@ -143,7 +142,7 @@ def label_to_img(imgwidth, imgheight, w, h, labels):
     idx = 0
     for i in range(0,imgheight,h):
         for j in range(0,imgwidth,w):
-            if labels[idx][0] > 0.5:
+            if labels[idx] > 0.5:
                 l = 1
             else:
                 l = 0
@@ -157,12 +156,11 @@ def img_float_to_uint8(img):
     return rimg
 
 def concatenate_images(img, gt_img):
-    nChannels = len(gt_img.shape)
-    w = gt_img.shape[0]
-    h = gt_img.shape[1]
-    if nChannels == 3:
+    if len(gt_img.shape) == 3:
         cimg = numpy.concatenate((img, gt_img), axis=1)
     else:
+        w = gt_img.shape[0]
+        h = gt_img.shape[1]
         gt_img_3c = numpy.zeros((w, h, 3), dtype=numpy.uint8)
         gt_img8 = img_float_to_uint8(gt_img)          
         gt_img_3c[:,:,0] = gt_img8
