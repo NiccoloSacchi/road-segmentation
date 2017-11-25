@@ -46,8 +46,8 @@ def img_crop(im, w, h):
     imgwidth = im.shape[0]
     imgheight = im.shape[1]
     is_2d = len(im.shape) < 3
-    for i in range(0,imgheight,h):
-        for j in range(0,imgwidth,w):
+    for j in range(0,imgheight,h):
+        for i in range(0,imgwidth,w):
             if is_2d:
                 im_patch = im[j:j+w, i:i+h]
             else:
@@ -140,8 +140,8 @@ def print_predictions(predictions, labels):
 def label_to_img(imgwidth, imgheight, w, h, labels):
     array_labels = numpy.zeros([imgwidth, imgheight])
     idx = 0
-    for i in range(0,imgheight,h):
-        for j in range(0,imgwidth,w):
+    for j in range(0,imgheight,h):
+        for i in range(0,imgwidth,w):
             if labels[idx] > 0.5:
                 l = 1
             else:

@@ -7,51 +7,198 @@ import pandas as pd
 from types import SimpleNamespace 
 from sklearn import linear_model
 import matplotlib.pyplot as plt
+from keras.utils import np_utils
 
-# each patch is 16*16 pixels
-patch_size = 16
+PATCH_WIDTH = 16 # each patch is 16*16 pixels
 
-def display_prediction(img, Z):
-    # Display prediction as an image
+def display_prediction(img, Z, ax=None):
+    """ Display predictions on the image. """
     fig1 = plt.figure(figsize=(10, 10)) # create a figure with the default size 
 
-    patch_size = 16
     w, h = img.shape[0], img.shape[1] # 608, 608 for test set
 
     # show the i-th image of the test set and the corresponding predictions
-    predicted_im = label_to_img(w, h, patch_size, patch_size, Z)
+    predicted_im = label_to_img(w, h, PATCH_WIDTH, PATCH_WIDTH, Z)
     new_img = make_img_overlay(img, predicted_im)
 
+    if ax != None:
+        ax.imshow(new_img)
+        return
     plt.imshow(new_img)
     
+def split_train_test(imgs, gt_imgs, train_ratio=0.8, seed=1):
+    """ Given a list of images and respective groundtruth images, splits them 
+    into a train set and test set. train_ratio specifies how many.
+    Use a fixed seed to guarantee reproducibility. """
+    
+    n_images = imgs.shape[0] # number of images
+    
+    np.random.seed(seed)
+    indices_shuffled = np.random.permutation(n_images) 
+    
+    train_size = int(0.8*n_images) # size of the train set
+    
+    train = SimpleNamespace()
+    train.imgs = imgs[indices_shuffled[:train_size]]
+    train.gt_imgs = gt_imgs[indices_shuffled[:train_size]]
+    
+    test = SimpleNamespace()
+    test.imgs = imgs[indices_shuffled[train_size:]]
+    test.gt_imgs = gt_imgs[indices_shuffled[train_size:]]
+    
+    return train, test
+    
+def extend_images(imgs, window_width):
+    """ Given a list of images and the size of the window, extends each 
+    image by mirroring its border pixels. """
+    
+    if window_width < PATCH_WIDTH:
+        print("Error: the window width should be at least a wide as the patch.")
+        return 
+    
+    if window_width % 2 != 0:
+        print("Error: the window width should be even.")
+        return 
+    
+    mirror_width = int((window_width-PATCH_WIDTH)/2)
+    
+    def extend_image(img):
+        new_size = np.array(img.shape)
+        new_size[0] = new_size[0] + mirror_width*2
+        new_size[1] = new_size[1] + mirror_width*2
+        extended_img = np.zeros(new_size)
+        # put the original image at the center
+        extended_img[mirror_width:-mirror_width, mirror_width:-mirror_width] = img
+
+        # then mirror the 4 sides
+        # left 
+        extended_img[mirror_width:-mirror_width, :mirror_width] = np.flip(img[:, :mirror_width], 1)
+        # right
+        extended_img[mirror_width:-mirror_width, -mirror_width:] = np.flip(img[:, -mirror_width:], 1)
+        # top 
+        extended_img[:mirror_width, mirror_width:-mirror_width] = np.flip(img[:mirror_width, :], 0)
+        # bottom 
+        extended_img[-mirror_width:, mirror_width:-mirror_width] = np.flip(img[-mirror_width:, :], 0)
+
+        # finally "fill" the corners
+        # top-left
+        extended_img[:mirror_width, :mirror_width] = np.flip(extended_img[mirror_width:2*mirror_width, :mirror_width], 0)
+        # top-right
+        extended_img[:mirror_width, -mirror_width:] = np.flip(extended_img[mirror_width:2*mirror_width, -mirror_width:], 0)
+        # bottom-left
+        extended_img[-mirror_width:, :mirror_width] = np.flip(extended_img[-2*mirror_width:-mirror_width, :mirror_width], 0)
+        # bottom-right
+        extended_img[-mirror_width:, -mirror_width:] = np.flip(extended_img[-2*mirror_width:-mirror_width, -2*mirror_width:-mirror_width], 0)
+        
+        return extended_img
+    
+    return np.array([extend_image(img) for img in imgs])
+        
+
+def display_ith_prediction(test, Z, i, window_width):
+    """ Given the test (or the train) object, the respective predictions, an index i and the width of
+    the window used, display the i-th image and its respective predictions. """
+    # just compute some parameters
+    mirror_width = int((window_width-PATCH_WIDTH)/2)
+    w, h = test.imgs[0].shape[0]-mirror_width*2, test.imgs[0].shape[1]-mirror_width*2
+    n_windows_h = int(h / PATCH_WIDTH)
+    n_windows_w = int(w / PATCH_WIDTH)
+    n_windows = n_windows_w*n_windows_h
+    
+    # get the i-th image (remove the "mirrors")
+    image = test.imgs[i][mirror_width:-mirror_width, mirror_width:-mirror_width]
+    # select the predictions from Z
+    prediction = Z[i*n_windows:(i+1)*n_windows]
+    display_prediction(image, prediction)
+    return
+
+
+def imgs_to_inputs_outputs(imgs, gt_imgs, window_width):
+    """ Given a list of images and a window width, convert each image into a list of windows
+    where each window is related to a patch that need to be classified (positioned at the 
+    center of the image).
+    Returns the list of windows and the corresponding list of labels (computed from the 
+    list of groundtruth images). 
+    """
+    
+    h, w = imgs[0].shape[0], imgs[0].shape[1]
+    
+    patch_border = window_width-PATCH_WIDTH
+    n_windows_h = (h-patch_border) / PATCH_WIDTH
+    n_windows_w = (w-patch_border) / PATCH_WIDTH
+    
+    if n_windows_h%1 != 0:
+        print("Error: the size of the image should be such that when shifting the window with steps as big as the" + 
+              " patch width the windows is always completely within the image. Check the height of the image.")
+    if n_windows_w%1 != 0:
+        print("Error: the size of the image should be such that when shifting the window with steps as big as the" + 
+              " patch width the windows is always completely within the image. Check the width of the image.")
+        
+    n_images = len(imgs)
+    n_gt_images = len(gt_imgs)
+    if n_images != n_gt_images:
+        print("Error: you should pass for each image its groundtruth. Check the length of the passed list of images.")
+    
+    n_windows_h = int(n_windows_h)
+    n_windows_w = int(n_windows_w)
+    n_windows = int(n_windows_h*n_windows_w)
+    def img_to_inputs_outputs(img, gt_img):
+        """ Given an image and its groundtruth, extract the inputs (windows) and the relative outputs """
+        # a list of windows of the image
+        windows = np.zeros((n_windows, window_width, window_width, img.shape[2]))
+        outputs = np.zeros(n_windows)
+        # [row_start, col_start] = top-left index of the window
+        for i, row_start in enumerate(range(0, h-window_width+1, PATCH_WIDTH)):
+            n_rows_windows = i*n_windows_w # number of windows in previous rows
+            row_end = row_start + window_width
+            for j, col_start in enumerate(range(0, w-window_width+1, PATCH_WIDTH)):
+                col_end = col_start + window_width
+                windows[n_rows_windows + j, :, :, :] = img[row_start:row_end, col_start:col_end]
+                outputs[n_rows_windows + j] = int(value_to_class(np.mean(get_patch(gt_img, i, j))))
+        return windows, np_utils.to_categorical(outputs, 2)
+   
+    X = np.zeros((n_images*n_windows, window_width, window_width, 3)) # array of windows
+    Y = np.zeros((n_images*n_windows, 2)) # array of labels (2 classes)
+    for n_image in range(n_images):
+         # convert each image into a couple of (inputs, ouputs) and then append them to X and Y 
+        index = n_image*n_windows
+        X[index:index+n_windows], Y[index:index+n_windows] = img_to_inputs_outputs(imgs[n_image], gt_imgs[n_image])
+    return X, Y 
+        
 # Extract patches from a given image
 def img_crop_matr(img):
     """ Returns a matrix of patches. """
     is_2d = len(img.shape) < 3
     h, w = img.shape[0], img.shape[1]
     
-    # please make sure h and w are divisible by patch_size
-    h_patches = int(h/patch_size)
-    w_patches = int(w/patch_size)
+    # please make sure h and w are divisible by PATCH_WIDTH
+    h_patches = int(h/PATCH_WIDTH)
+    w_patches = int(w/PATCH_WIDTH)
     
     # a matrix of patches
     if is_2d:
-        patches = np.zeros((h_patches, w_patches, patch_size, patch_size))
+        patches = np.zeros((h_patches, w_patches, PATCH_WIDTH, PATCH_WIDTH))
     else:
-        patches = np.zeros((h_patches, w_patches, patch_size, patch_size, 3))
+        patches = np.zeros((h_patches, w_patches, PATCH_WIDTH, PATCH_WIDTH, 3))
 
     for i in range(h_patches):
-        h_start = patch_size*i
-        h_end = patch_size*(i+1)
+        h_start = PATCH_WIDTH*i
+        h_end = PATCH_WIDTH*(i+1)
         for j in range(w_patches):
-            w_start = patch_size*j
-            w_end = patch_size*(j+1)
+            w_start = PATCH_WIDTH*j
+            w_end = PATCH_WIDTH*(j+1)
             if is_2d:
                 patches[i, j] = img[h_start:h_end, w_start:w_end]
             else:
                 patches[i, j] = img[h_start:h_end, w_start:w_end, :]
     return patches
 
+def get_patch(img, i, j):
+    """ Returns the patch at position (i, j) """
+    row_start = i*PATCH_WIDTH
+    col_start = j*PATCH_WIDTH
+    return img[row_start:row_start+PATCH_WIDTH, col_start:col_start+PATCH_WIDTH]
+    
 def flatten(matr):
     """ Given a matrix (or an array), flattens it. """
     return [val for row in matr for val in row]
@@ -71,7 +218,8 @@ def load_images(n=100):
     gt_image_dir = root_dir + "groundtruth/"
     gt_images = os.listdir(gt_image_dir)
     
-    return [load_image(image_dir + images[i]) for i in range(n)], [load_image(gt_image_dir + gt_images[i]) for i in range(n)]
+    return  np.array([load_image(image_dir + images[i]) for i in range(n)]), \
+            np.array([load_image(gt_image_dir + gt_images[i]) for i in range(n)])
 
 def load_image(infilename):
     data = mpimg.imread(infilename)
@@ -101,13 +249,13 @@ def imgs_to_outputs(imgs):
 def img_to_inputs(img):
     """ Given an input image, converts it into patches and 
     for each one of them the features. """
-    X = np.asarray([ extract_features_from_patch(patch) for patch in img_crop(img, patch_size, patch_size)])
+    X = np.asarray([extract_features_from_patch(patch) for patch in img_crop(img, PATCH_WIDTH, PATCH_WIDTH)])
     return X
     
 def img_to_outputs(img):
     """ Given a groundtruth image, splits it into patches and 
     convert each patch into either 0 (background) or 1 (road) """
-    Y = [int(value_to_class(np.mean(patch))) for patch in img_crop(img, patch_size, patch_size)]
+    Y = [int(value_to_class(np.mean(patch))) for patch in img_crop(img, PATCH_WIDTH, PATCH_WIDTH)]
     return Y
 
 def stats(predictions, correct):
