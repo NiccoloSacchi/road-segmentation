@@ -305,8 +305,8 @@ def stats(predictions, correct):
     score.F1 = 2*(score.precision * score.recall) / (score.precision + score.recall)
     
     # show the results
-    display(confusion_matrix.abs)
-    display(confusion_matrix.ratio)
+    #display(confusion_matrix.abs)
+    #display(confusion_matrix.ratio)
 
     print("\nRecall =", score.recall)
     print("Precision =", score.precision)
