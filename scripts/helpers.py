@@ -48,6 +48,29 @@ def split_train_test(imgs, gt_imgs, train_ratio=0.8, seed=1):
     
     return train, test
     
+def augment_images(imgs, mirror=False, degrees=0):
+    """ Function used to apply on the input images mirrorng and/or rotation.
+    imgs: list of images that have to be modified 
+    mirror: {True, False} (whether to flips on the x axis)
+    degrees: 45*k where k = 0,...,7 
+    N.B. This function must be applied on both the input images and on the grountruth images. """
+    
+    if (mirror==False) and ((degrees % 360) == 0):
+        # do nothing
+        return imgs
+    
+    if mirror == True:
+        # mirror the image
+        imgs_aug = [np.flip(imgs[i], axis=1) for img in imgs]
+        
+    if (degrees % 90) == 0:
+        # much faster with numpy
+        imgs_aug = [numpy.rot90(img, k=int(degrees/90), axes=(0, 1)) for img in imgs]
+    else:
+        imgs_aug = [rotate(imgs_aug[i], degrees, reshape=True, order=1, cval=2) for img in imgs]
+            
+    return imgs_aug    
+
 def extend_images(imgs, window_width):
     """ Given a list of images and the size of the window, extends each 
     image by mirroring its border pixels. """
