@@ -189,27 +189,27 @@ def imgs_to_inputs_outputs(imgs, gt_imgs, window_width):
     return X, Y 
         
 # Extract patches from a given image
-def img_crop_matr(img):
+def img_crop_matr(img, patch_width=PATCH_WIDTH):
     """ Returns a matrix of patches. """
     is_2d = len(img.shape) < 3
     h, w = img.shape[0], img.shape[1]
     
     # please make sure h and w are divisible by PATCH_WIDTH
-    h_patches = int(h/PATCH_WIDTH)
-    w_patches = int(w/PATCH_WIDTH)
+    h_patches = int(h/patch_width)
+    w_patches = int(w/patch_width)
     
     # a matrix of patches
     if is_2d:
-        patches = np.zeros((h_patches, w_patches, PATCH_WIDTH, PATCH_WIDTH))
+        patches = np.zeros((h_patches, w_patches, patch_width, patch_width))
     else:
-        patches = np.zeros((h_patches, w_patches, PATCH_WIDTH, PATCH_WIDTH, 3))
+        patches = np.zeros((h_patches, w_patches, patch_width, patch_width, 3))
 
     for i in range(h_patches):
-        h_start = PATCH_WIDTH*i
-        h_end = PATCH_WIDTH*(i+1)
+        h_start = patch_width*i
+        h_end = patch_width*(i+1)
         for j in range(w_patches):
-            w_start = PATCH_WIDTH*j
-            w_end = PATCH_WIDTH*(j+1)
+            w_start = patch_width*j
+            w_end = patch_width*(j+1)
             if is_2d:
                 patches[i, j] = img[h_start:h_end, w_start:w_end]
             else:
