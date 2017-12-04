@@ -36,7 +36,7 @@ def split_train_test(imgs, gt_imgs, train_ratio=0.8, seed=1):
     np.random.seed(seed)
     indices_shuffled = np.random.permutation(n_images) 
     
-    train_size = int(0.8*n_images) # size of the train set
+    train_size = int(train_ratio*n_images) # size of the train set
     
     train = SimpleNamespace()
     train.imgs = imgs[indices_shuffled[:train_size]]
