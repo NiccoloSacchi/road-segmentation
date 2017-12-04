@@ -11,66 +11,6 @@ from keras.utils import np_utils
 
 PATCH_WIDTH = 16 # each patch is 16*16 pixels
 
-def display_prediction(img, Z, ax=None):
-    """ Display predictions on the image. """
-    fig1 = plt.figure(figsize=(10, 10)) # create a figure with the default size 
-
-    w, h = img.shape[0], img.shape[1] # 608, 608 for test set
-
-    # show the i-th image of the test set and the corresponding predictions
-    predicted_im = label_to_img(w, h, PATCH_WIDTH, PATCH_WIDTH, Z)
-    new_img = make_img_overlay(img, predicted_im)
-
-    if ax != None:
-        ax.imshow(new_img)
-        return
-    plt.imshow(new_img)
-    
-def split_train_test(imgs, gt_imgs, train_ratio=0.8, seed=1):
-    """ Given a list of images and respective groundtruth images, splits them 
-    into a train set and test set. train_ratio specifies how many.
-    Use a fixed seed to guarantee reproducibility. """
-    
-    n_images = imgs.shape[0] # number of images
-    
-    np.random.seed(seed)
-    indices_shuffled = np.random.permutation(n_images) 
-    
-    train_size = int(train_ratio*n_images) # size of the train set
-    
-    train = SimpleNamespace()
-    train.imgs = imgs[indices_shuffled[:train_size]]
-    train.gt_imgs = gt_imgs[indices_shuffled[:train_size]]
-    
-    test = SimpleNamespace()
-    test.imgs = imgs[indices_shuffled[train_size:]]
-    test.gt_imgs = gt_imgs[indices_shuffled[train_size:]]
-    
-    return train, test
-    
-def augment_images(imgs, mirror=False, degrees=0):
-    """ Function used to apply on the input images mirrorng and/or rotation.
-    imgs: list of images that have to be modified 
-    mirror: {True, False} (whether to flips on the x axis)
-    degrees: 45*k where k = 0,...,7 
-    N.B. This function must be applied on both the input images and on the grountruth images. """
-    
-    if (mirror==False) and ((degrees % 360) == 0):
-        # do nothing
-        return imgs
-    
-    if mirror == True:
-        # mirror the image
-        imgs_aug = [np.flip(imgs[i], axis=1) for img in imgs]
-        
-    if (degrees % 90) == 0:
-        # much faster with numpy
-        imgs_aug = [numpy.rot90(img, k=int(degrees/90), axes=(0, 1)) for img in imgs]
-    else:
-        imgs_aug = [rotate(imgs_aug[i], degrees, reshape=True, order=1, cval=2) for img in imgs]
-            
-    return imgs_aug    
-
 def extend_images(imgs, window_width):
     """ Given a list of images and the size of the window, extends each 
     image by mirroring its border pixels. """
@@ -187,34 +127,6 @@ def imgs_to_inputs_outputs(imgs, gt_imgs, window_width):
         index = n_image*n_windows
         X[index:index+n_windows], Y[index:index+n_windows] = img_to_inputs_outputs(imgs[n_image], gt_imgs[n_image])
     return X, Y 
-        
-# Extract patches from a given image
-def img_crop_matr(img, patch_width=PATCH_WIDTH):
-    """ Returns a matrix of patches. """
-    is_2d = len(img.shape) < 3
-    h, w = img.shape[0], img.shape[1]
-    
-    # please make sure h and w are divisible by PATCH_WIDTH
-    h_patches = int(h/patch_width)
-    w_patches = int(w/patch_width)
-    
-    # a matrix of patches
-    if is_2d:
-        patches = np.zeros((h_patches, w_patches, patch_width, patch_width))
-    else:
-        patches = np.zeros((h_patches, w_patches, patch_width, patch_width, 3))
-
-    for i in range(h_patches):
-        h_start = patch_width*i
-        h_end = patch_width*(i+1)
-        for j in range(w_patches):
-            w_start = patch_width*j
-            w_end = patch_width*(j+1)
-            if is_2d:
-                patches[i, j] = img[h_start:h_end, w_start:w_end]
-            else:
-                patches[i, j] = img[h_start:h_end, w_start:w_end, :]
-    return patches
 
 def get_patch(img, i, j):
     """ Returns the patch at position (i, j) """
@@ -225,28 +137,6 @@ def get_patch(img, i, j):
 def flatten(matr):
     """ Given a matrix (or an array), flattens it. """
     return [val for row in matr for val in row]
-
-def load_images(n=100):
-    """ 
-    Loads n training images (n=100 loads all the images) both the input images.
-    and the groundtruth images. Returns the two list of images. """
-    n = min(n, 100) 
-    print("Loading " + str(n) + " images")
-    
-    root_dir = "../dataset/training/"
-    
-    image_dir = root_dir + "images/"
-    images = os.listdir(image_dir)
-    
-    gt_image_dir = root_dir + "groundtruth/"
-    gt_images = os.listdir(gt_image_dir)
-    
-    return  np.array([load_image(image_dir + images[i]) for i in range(n)]), \
-            np.array([load_image(gt_image_dir + gt_images[i]) for i in range(n)])
-
-def load_image(infilename):
-    data = mpimg.imread(infilename)
-    return data
 
 # Extract 6-dimensional features consisting of average RGB color as well as variance
 def extract_features_from_patch(img_patch):
@@ -305,11 +195,24 @@ def stats(predictions, correct):
     )
     
     # with rates
-    FNR = FN / (TP + FN) # ratio of wrongly "covered" roads
-    TNR = TN / (FP + TN) # ratio of correctly "covered" background
-
-    FPR = FP / (FP + TN) # ratio of wrongly "covered" background
-    TPR = TP / (TP + FN) # ratio of correctly "covered" roads 
+    try:
+        FNR = FN / (TP + FN) # ratio of wrongly "covered" roads
+    except:
+        FNR = 0
+    try:
+        TNR = TN / (FP + TN) # ratio of correctly "covered" background
+    except:
+        TNR = 0
+        
+    try: 
+        FPR = FP / (FP + TN) # ratio of wrongly "covered" background
+    except:
+        FPR = 0
+        
+    try:
+        TPR = TP / (TP + FN) # ratio of correctly "covered" roads 
+    except:
+        TPR = 0
     
     confusion_matrix.ratio = pd.DataFrame(
         data = [[TNR, FNR], [FPR, TPR]],
