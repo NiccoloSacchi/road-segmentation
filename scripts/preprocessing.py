@@ -61,7 +61,7 @@ def img_crop_matr(img, patch_width=PATCH_WIDTH):
     return patches
 
 def images_to_XY(imgs, gt_imgs, predict_patch_width=PATCH_WIDTH):
-    """ Convert the imaged to the required format so that they can be fed to the cnn 
+    """ Convert the images to the required format so that they can be fed to the cnn. 
         predict_patch_width: is the with of the patch you want to predict (it must be 
         coherent with the otuput of the cnn). """
     
@@ -76,7 +76,7 @@ def images_to_XY(imgs, gt_imgs, predict_patch_width=PATCH_WIDTH):
                 for i in range(Y.shape[1]):
                     for j in range(Y.shape[2]):
                         Y[im, i, j] = value_to_class(np.mean(gt_matr[im, i, j]))
-            return np_utils.to_categorical(Y, 2)
+            return Y #np_utils.to_categorical(Y, 2) ot np.expand_dims(Y, axis=3)
         return np.array(None)
 
     X = imgs
@@ -91,46 +91,46 @@ def value_to_class(v):
     else:
         return 0
     
-def rand_augment_images(imgs, gt_imgs):
-    """ Apply a random augmentation to the images """
+# def rand_augment_images(imgs, gt_imgs):
+#     """ Apply a random augmentation to the images """
     
-    if imgs.shape[0] != gt_imgs.shape[0]:
-        print("The number of images should be the same as the number of groundtruth images")
-        return 
+#     if imgs.shape[0] != gt_imgs.shape[0]:
+#         print("The number of images should be the same as the number of groundtruth images")
+#         return 
     
-    imgs_aug = np.zeros(imgs.shape)
-    gt_imgs_aug = np.zeros(gt_imgs.shape)
-    for i in range(imgs.shape[0]):
-        # randomly mirror and rotate
-        mirror = (np.random.random()>0.5)
-        degrees = (np.random.randint(4)*90)
-        imgs_aug[i] = augment_image(imgs[i], mirror=mirror, degrees=degrees)
-        gt_imgs_aug[i] = augment_image(gt_imgs[i], mirror=mirror, degrees=degrees)
+#     imgs_aug = np.zeros(imgs.shape)
+#     gt_imgs_aug = np.zeros(gt_imgs.shape)
+#     for i in range(imgs.shape[0]):
+#         # randomly mirror and rotate
+#         mirror = (np.random.random()>0.5)
+#         degrees = (np.random.randint(4)*90)
+#         imgs_aug[i] = augment_image(imgs[i], mirror=mirror, degrees=degrees)
+#         gt_imgs_aug[i] = augment_image(gt_imgs[i], mirror=mirror, degrees=degrees)
         
-    return imgs_aug, gt_imgs_aug
+#     return imgs_aug, gt_imgs_aug
     
-def augment_image(img, mirror=False, degrees=0):
-    """ Function used to apply on the input images mirrorng and/or rotation.
-    img: image that have to be modified 
-    mirror: {True, False} (whether to flips on the x axis)
-    degrees: any integer = 90*k 
-    N.B. This function must be applied on both the input image and on the grountruth image. """
+# def augment_image(img, mirror=False, degrees=0):
+#     """ Function used to apply on the input images mirrorng and/or rotation.
+#     img: image that have to be modified 
+#     mirror: {True, False} (whether to flips on the x axis)
+#     degrees: any integer = 90*k 
+#     N.B. This function must be applied on both the input image and on the grountruth image. """
     
-    if (mirror==False) and ((degrees % 360) == 0):
-        # do nothing
-        return img
-    img_aug = img
-    if mirror == True:
-        # mirror the image
-        img_aug = np.flip(img_aug, axis=1)
+#     if (mirror==False) and ((degrees % 360) == 0):
+#         # do nothing
+#         return img
+#     img_aug = img
+#     if mirror == True:
+#         # mirror the image
+#         img_aug = np.flip(img_aug, axis=1)
         
-    if (degrees % 90) == 0:
-        # much faster with numpy
-        img_aug = np.rot90(img_aug, k=int(degrees/90), axes=(0, 1))
-#     else:
-#         imgs_aug = [rotate(imgs_aug[i], degrees, reshape=True, order=1, cval=2) for img in imgs]
+#     if (degrees % 90) == 0:
+#         # much faster with numpy
+#         img_aug = np.rot90(img_aug, k=int(degrees/90), axes=(0, 1))
+# #     else:
+# #         imgs_aug = [rotate(imgs_aug[i], degrees, reshape=True, order=1, cval=2) for img in imgs]
             
-    return img_aug
+#     return img_aug
 
 # def augment_images(imgs, mirror=False, degrees=0):
 #     """ Function used to apply on the input images mirrorng and/or rotation.
