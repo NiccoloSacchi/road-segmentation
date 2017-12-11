@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras import backend as K
 from tf_aerial_images import make_img_overlay
+from matplotlib.ticker import MaxNLocator
 
 # TODO fix this function
 def display_prediction(img, prediction, ax=None):
@@ -93,3 +94,33 @@ def evaluate_predictions(pred, true):
     # Plot normalized confusion matrix
     plot_confusion_matrix(cnf_matrix, classes=target_names, normalize=True,
                          title='Normalized confusion matrix')
+    
+def plot_history(history, last_epochs=-1):
+    num_epochs = len(history['loss']) if last_epochs==-1 else last_epochs
+    # visualizing losses and accuracy
+    train_loss=history['loss'][-num_epochs:]
+    val_loss=history['val_loss'][-num_epochs:]
+    train_acc=history['acc'][-num_epochs:]
+    val_acc=history['val_acc'][-num_epochs:]
+    xc=range(len(history['loss']))[-num_epochs:]
+
+    fig, axs = plt.subplots(2, 1)
+    fig.set_size_inches((7, 14))
+    axs[0].plot(xc,train_loss)
+    axs[0].plot(xc,val_loss)
+    axs[0].set_xlabel('num of Epochs')
+    axs[0].set_ylabel('loss')
+    axs[0].set_title('train_loss vs val_loss')
+    axs[0].grid(True)
+    axs[0].legend(['train','val'])
+    axs[0].xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    axs[1].plot(xc,train_acc)
+    axs[1].plot(xc,val_acc)
+    axs[1].set_xlabel('num of Epochs')
+    axs[1].set_ylabel('accuracy')
+    axs[1].set_ylim([0, 1])
+    axs[1].set_title('train_acc vs val_acc')
+    axs[1].grid(True)
+    axs[1].legend(['train','val'],loc=4)
+    axs[1].xaxis.set_major_locator(MaxNLocator(integer=True))
