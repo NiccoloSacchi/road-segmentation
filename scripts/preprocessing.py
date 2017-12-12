@@ -11,6 +11,25 @@ from scipy.ndimage import rotate
 
 PATCH_WIDTH = 16
 
+def load_images_range(start, end):
+    """ 
+    Loads n training images (n=100 loads all the images) both the input images.
+    and the groundtruth images. Returns the two list of images. """
+    n = min(end-start, 100) 
+    print("Loading images " + str(start) + " to "+str(end))
+    
+    root_dir = "../dataset/training/"
+    
+    image_dir = root_dir + "images/"
+    images = os.listdir(image_dir)
+    
+    gt_image_dir = root_dir + "groundtruth/"
+    gt_images = os.listdir(gt_image_dir)
+    
+    return  np.array([load_image(image_dir + images[i]) for i in range(start,end)]), \
+            np.array([load_image(gt_image_dir + gt_images[i]) for i in range(start,end)])
+
+    
 def load_images(n=100):
     """ 
     Loads n training images (n=100 loads all the images) both the input images.
