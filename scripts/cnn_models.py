@@ -30,6 +30,9 @@ from functools import reduce
 import json
 from types import SimpleNamespace 
 
+from preprocessing import *
+import imageio
+
 class CnnModel:
     def __init__(self, model_n=0, model_path=""):
         """ Initilizes a model.
@@ -49,6 +52,29 @@ class CnnModel:
         if not os.path.exists(model_path):
             os.makedirs(model_path)
         self.model_path=model_path
+
+    def predict_and_export(self):
+        filename_list = []
+        for batch_idx in range(10):
+            images = load_images_to_predict(batch_idx*5,batch_idx*5+5)
+            predictions = self.model.predict(images)
+            img_matrix = np.zeros([predictions.shape[0],predictions.shape[1],predictions.shape[2]])
+
+            print(img_matrix.shape)
+            for i in range(predictions.shape[0]):
+                for row in range(predictions.shape[1]):
+                    for col in range (predictions.shape[2]):
+                        if predictions[i][row][col][0] < predictions[i][row][col][1] :
+                            img_matrix[i][row][col] = 1
+                img_idx = batch_idx*5+i+1
+                filename = "../dataset/test_set_images/test_"+str(img_idx)+"/gt"+str(img_idx)+".jpg"
+                imageio.imwrite(filename, img_matrix[i])
+                filename_list.append(filename)
+
+        masks_to_submission("testsub.csv",filename_list)
+    
+    def predict(self, x, batch_size=None, verbose=0, steps=None):
+        return self.model.predict(x)#,batch_size = batch_size, verbose = verbose, steps = steps)
         
     def summary(self):
         """ Print the layers of the model. """
@@ -79,7 +105,7 @@ class CnnModel:
         # could also add "-{epoch:03d}-{loss:.4f}-{acc:.4f}" to the name
         callbacks_list = []
         if monitor != '':
-            filepath = self.model_path+"/"+str('{0:%Y-%m-%d_%H:%M:%S}'.format(datetime.now()))+"_best-weights.hdf5" 
+            filepath = self.model_path+"\\"+str('{0:%Y-%m-%d_%H%M%S}'.format(datetime.now()))+"_best-weights.hdf5" 
             checkpoint = callbacks.ModelCheckpoint(filepath, monitor=monitor, verbose=1, save_best_only=True, mode='min')
             callbacks_list = [checkpoint]
 
@@ -179,7 +205,7 @@ class CnnModel:
         }
         
         # store the results
-        filepath = self.model_path+"/cross_validation_" + str('{0:%Y-%m-%d_%H:%M:%S}'.format(datetime.now())) +".json"
+        filepath = self.model_path+"/cross_validation_" + str('{0:%Y-%m-%d_%H%M%S}'.format(datetime.now())) +".json"
         with open(filepath, "w") as json_file:
             json_file.write(json.dumps(results, indent=4))
         
@@ -282,6 +308,9 @@ class CnnModel:
     def load_weights(self, file):
         """ Load  from the given file the weights to the current model """
         self.model.load_weights(self.model_path + "/" + file)
+        
+   
+        
         
 def image_generators(X, Y):
     """ 

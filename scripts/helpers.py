@@ -8,8 +8,15 @@ from types import SimpleNamespace
 from sklearn import linear_model
 import matplotlib.pyplot as plt
 from keras.utils import np_utils
-
+import imageio
 PATCH_WIDTH = 16 # each patch is 16*16 pixels
+
+def export_predictions(predictions):
+    img_matrix = np.zeros([predictions.shape[0:2]])
+    print(img_matrix.shape)
+    #for i in range(predictions.
+    return img_matrix
+
 
 def extend_images(imgs, window_width):
     """ Given a list of images and the size of the window, extends each 

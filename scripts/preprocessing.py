@@ -11,6 +11,17 @@ from scipy.ndimage import rotate
 
 PATCH_WIDTH = 16
 
+def load_images_to_predict(start,end):
+    n = end-start 
+    print("Loading " + str(n) + " images to predict")
+    
+    root_dir = "../dataset/test_set_images/"
+    for i in range(start+1,end+1):
+        print("loading image " + root_dir + "test_"+str(i)+"/test_"+str(i)+".png");
+    
+    return  np.array([load_image(root_dir + "test_"+str(i)+"/test_"+str(i)+".png") for i in range(start+1,end+1)])
+    
+
 def load_images_range(start, end):
     """ 
     Loads n training images (n=100 loads all the images) both the input images.
@@ -29,6 +40,7 @@ def load_images_range(start, end):
     return  np.array([load_image(image_dir + images[i]) for i in range(start,end)]), \
             np.array([load_image(gt_image_dir + gt_images[i]) for i in range(start,end)])
 
+ 
     
 def load_images(n=100):
     """ 
