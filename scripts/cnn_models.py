@@ -89,6 +89,18 @@ class CnnModel:
         
     def compile(self):
         """ Compiles the model: define the learning process """
+#         def softmax_categorical_crossentropy(y_true, y_pred):
+#             """
+#             Uses categorical cross-entropy from logits in order to improve numerical stability.
+#             This is especially useful for TensorFlow (less useful for Theano).
+#             """
+#             return K.categorical_crossentropy(y_pred, y_true, from_logits=True)
+
+#         opt = Adam(lr=0.001) # Adam optimizer with default initial learning rate
+#         self.model.compile(loss=softmax_categorical_crossentropy,
+#                       optimizer=opt,
+#                       metrics=['accuracy'])
+        
         self.model.compile(
             loss='categorical_crossentropy',
             optimizer='adam',
@@ -222,7 +234,7 @@ class CnnModel:
         """ Plot the history of the model (loss and accuracies obtained duting the training).
             If last_epochs!=-1 then plot only the last give number of epochs
         """
-        plot_history(self.history, last_epochs=-1)        
+        plot_history(self.history, last_epochs=last_epochs)        
             
     def show_layer_output(self, image, layer_num, filename=""):
         """ Use this function to plot the output (activations) of a layer. 
@@ -507,7 +519,7 @@ def model1():
     return model
 
 def model2():
-    # with relufrom keras import backend as K
+    # with relu from keras import backend as K
     nclasses = 2
     model = Sequential()
 
