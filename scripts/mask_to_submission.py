@@ -4,7 +4,8 @@ import os
 import numpy as np
 import matplotlib.image as mpimg
 import re
-
+from PIL import Image
+    
 foreground_threshold = 0.25 # percentage of pixels > 1 required to assign a foreground label to a patch
 
 # assign a label to a patch
@@ -19,8 +20,11 @@ def patch_to_label(patch):
 def mask_to_submission_strings(image_filename):
     """Reads a single image and outputs the strings that should go into the submission file"""
     img_number = int(re.search(r"\d+", image_filename).group(0))
-    im = mpimg.imread(image_filename)
-    im.resize(608,608)
+    img = Image.open(image_filename)
+    img = img.convert('1')#convert to black/white
+    img = img.resize((608,608))
+    im = np.array(img.getdata(),np.uint8).reshape(img.size[1], img.size[0], 1)
+    img.save(image_filename)
     patch_size = 16
     for j in range(0, im.shape[1], patch_size):
         for i in range(0, im.shape[0], patch_size):
