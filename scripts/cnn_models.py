@@ -31,7 +31,7 @@ import json
 from types import SimpleNamespace 
 
 from preprocessing import *
-from postprocessing import prediction_to_class
+from postprocessing import *
 import imageio
 from mask_to_submission import *
 
@@ -88,12 +88,45 @@ class CnnModel:
     def predict(self, x, batch_size=None, verbose=0, steps=None):
         return self.model.predict(x)#,batch_size = batch_size, verbose = verbose, steps = steps)
         
+    def predict_augmented(self, imgs, n_rotations=4, verbose=True):
+        """ Predict the probability of each patch of the input image.
+        Does so for 2*n_rotations times (augmenting the image) and averaging the predictions. 
+        img.shape = (#images, H, W, 3)
+        returned shape = (#images, H/n, W/n), floats indicating the road probabilities
+        verbose: True => print the status. False => print nothing"""
+        
+        # flip + rotate by 360/n_rotations * k (k=1, ..., n_rotations) => 2*n_rotations transformations (= #predictions)
+        num_images = imgs.shape[0]
+        rot_interval = int(360/n_rotations) 
+        prediction_shape = self.predict(imgs[:1])[0].shape # (I just get shape of the prediction)
+        predictions = np.zeros(np.append(num_images, prediction_shape)) # here we sum all the predictions 
+        for i in range(num_images):
+            print("Predicting image", i) if verbose else None
+            for flip in [False, True]:
+                print("\tFlipping image:", flip) if verbose else None
+                img_flipped = np.flip(imgs[i], axis=1) if flip else imgs[i]
+                for degrees in range(0, 360, rot_interval):
+                    print("\t\tRotate by", degrees, "degrees and predict") if verbose else None
+                    img_aug = rotate_image(img_flipped, degrees)
+                    # predict, the image 
+                    curr_pred = self.predict(np.array([img_aug]))[0]
+                    # flip and rotate back, and sum
+                    # when rotating back, I may obtain a bigger image of which I have to take just the one at the center
+                    curr_pred = take_image_at_center(rotate_image(curr_pred, -degrees), prediction_shape) 
+                    curr_pred = np.flip(curr_pred, axis=1) if flip else curr_pred
+                    predictions[i] += curr_pred
+
+        n_transformations = 2*n_rotations
+        predictions /=  n_transformations
+        return predictions
+    
     def name(self):
         return self.model_names[self.model_idx]
     
     def summary(self):
         """ Print the layers of the model. """
-        print(self.name())
+        if hasattr(self, 'name'):
+            print(self.name())
         print(self.model.summary())
         
     def compile(self):
@@ -425,18 +458,22 @@ def batches_generator(X, Y, batch_size=4):
     x, y = next(gen1) # just to take the shape of x and y
     while 1:
         # generate the batch
-        batch_x = np.zeros((np.append(batch_size, x.shape)))
-        batch_y = np.zeros((np.append(batch_size, y.shape)))
+        batch_x = np.zeros((np.append(batch_size, x.shape))).astype('float32')
+        batch_y = np.zeros((np.append(batch_size, y.shape))).astype('float32')
         
         for i in range(batch_size):
             if np.random.rand()<prob_gen1:
                 # then use gen1
-                batch_x[i], batch_y[i] = next(gen1)
+                bx, by = next(gen1)
+                print("gen1: generated images: ", bx.shape, by.shape)
+                batch_x[i], batch_y[i] = bx, by
             else:
-                batch_x[i], batch_y[i] = next(gen2)
+                bx, by = next(gen2)
+                print("gen2: generated images: ", bx.shape, by.shape)
+                batch_x[i], batch_y[i] = bx, by
                 
-#         print("\nGenerated x and y batch of sizes: ", batch_x.shape, batch_y.shape)
-        yield batch_x, np_utils.to_categorical(batch_y, 2) # convert Y to categorical (each pixel is either [1, 0] or [0, 1])
+        print("Generated x and y batch of sizes: ", batch_x.shape, batch_y.shape, batch_y.dtype, batch_x.dtype)
+        yield batch_x, np_utils.to_categorical(batch_y, 2).astype('float32') # convert Y to categorical (each pixel is either [1, 0] or [0, 1])
             
 # def batches_generator(batch_size, train):
 #     """ This function returns a generator to generate an infinite number of batches
