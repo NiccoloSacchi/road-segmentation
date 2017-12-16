@@ -61,9 +61,9 @@ class CnnModel:
     def predict_and_export(self):
         threshold = 0.5
         filename_list = []
-        for batch_idx in range(1):
+        for batch_idx in range(10):
             images = load_images_to_predict(batch_idx*5,batch_idx*5+5)
-            predictions = self.model.predict(images)
+            predictions = self.predict(images)
             
 #             img_matrix = np.zeros([predictions.shape[0],predictions.shape[1],predictions.shape[2]])
             
@@ -88,9 +88,9 @@ class CnnModel:
     def predict_augmented_and_export(self):
         threshold = 0.5
         filename_list = []
-        for batch_idx in range(1):
+        for batch_idx in range(10):
             images = load_images_to_predict(batch_idx*5,batch_idx*5+5)
-            predictions = self.model.predict(images)
+            predictions = self.predict_augmented(images, n_rotations=4, verbose=True)
             for i in range(predictions.shape[0]):              
                 img_idx = batch_idx*5+i+1
                 filename = "../dataset/test_set_images/test_"+str(img_idx)+"/gt"+str(img_idx)
