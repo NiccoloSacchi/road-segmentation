@@ -42,7 +42,10 @@ class CnnModel:
             model_path: here we save the best weight obtained during the training. If save() is called
                 the model, the current weights and its history will be saved in this path.
             """
-        models = [model1, model2] # here the list of the functions that create a model
+        # here the list of the functions that create a model
+        models = [model1, model2,additional_conv_layer_model,many_filters_model,max_pooling_model,leaky_relu_model,decreased_dropout_model] 
+        self.model_names = ["model1","model2","additional_conv_layer","many_filters","max_pooling","leaky_relu_model","decreased_dropout"]
+        self.model_idx = model_n
         self.model = models[model_n]() 
         self.history = {
             'acc': [],
@@ -80,13 +83,17 @@ class CnnModel:
                 imageio.imwrite(filename+ext, pred)
                 filename_list.append(filename+ext)
         
-        masks_to_submission("testsub2.csv",filename_list)
+        masks_to_submission("submission.csv",filename_list)
     
     def predict(self, x, batch_size=None, verbose=0, steps=None):
         return self.model.predict(x)#,batch_size = batch_size, verbose = verbose, steps = steps)
         
+    def name(self):
+        return self.model_names[self.model_idx]
+    
     def summary(self):
         """ Print the layers of the model. """
+        print(self.name())
         print(self.model.summary())
         
     def compile(self):
@@ -126,7 +133,7 @@ class CnnModel:
         # could also add "-{epoch:03d}-{loss:.4f}-{acc:.4f}" to the name
         callbacks_list = []
         if monitor != '':
-            filepath = self.model_path+"\\"+str('{0:%Y-%m-%d_%H%M%S}'.format(datetime.now()))+"_best-weights.hdf5" 
+            filepath = self.model_path+"\\"+str('{0:%Y-%m-%d_%H%M%S}'.format(datetime.now()))+"_best-weights"+self.model_names[self.model_idx]+".hdf5" 
             checkpoint = callbacks.ModelCheckpoint(filepath, monitor=monitor, verbose=1, save_best_only=True, mode='min')
             callbacks_list = [checkpoint]
 
@@ -226,7 +233,7 @@ class CnnModel:
         }
         
         # store the results
-        filepath = self.model_path+"/cross_validation_" + str('{0:%Y-%m-%d_%H%M%S}'.format(datetime.now())) +".json"
+        filepath = self.model_path+"/cross_validation_" + str('{0:%Y-%m-%d_%H%M%S}'.format(datetime.now())) +self.model_names[self.model_idx]+".json"
         with open(filepath, "w") as json_file:
             json_file.write(json.dumps(results, indent=4))
         
@@ -453,6 +460,318 @@ def batches_generator(X, Y, batch_size=4):
 
 # #             print("\nbatch generated: ", inputs.shape, targets.shape)
 #             yield (inputs, targets)
+def additional_conv_layer_model():
+    # with relu from keras import backend as K
+    nclasses = 2
+    model = Sequential()
+
+    # layer 1
+    model.add(
+        Conv2D(32, (11, 11), 
+               activation='relu',
+               padding="same", 
+               input_shape=(None, None, 3)))
+    model.add(Dropout(0.25)) 
+
+    # layer 2
+    model.add(
+        Conv2D(48, (5, 5),
+               activation='relu',
+               strides=(2, 2),
+               padding="same"
+              ))
+
+    # later 3
+    model.add(
+        Conv2D(48, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(Dropout(0.25)) 
+
+    # layer 4
+    model.add(
+        Conv2D(48, (5, 5),
+               activation='relu',
+               strides=(2, 2),
+               padding="same"))
+
+    # layer 5
+    model.add(
+        Conv2D(48, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(Dropout(0.25)) 
+
+    # layer 6
+    model.add(
+        Conv2D(64, (5, 5), 
+               activation='relu',
+               strides=(2, 2),
+               padding="same"))
+
+    # layer 7
+    model.add(
+        Conv2D(64, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(Dropout(0.25)) 
+
+    # layer 8
+    model.add(
+        Conv2D(2, (5, 5), 
+               activation='relu',
+               padding="same"))
+    
+    # layer 9
+    model.add(
+        Conv2D(2, (5, 5), 
+               activation='relu',
+               padding="same"))
+    
+    model.add(Activation('softmax'))
+
+    return model
+
+def many_filters_model():
+    # with relu from keras import backend as K
+    nclasses = 2
+    model = Sequential()
+
+    # layer 1
+    model.add(
+        Conv2D(64, (11, 11), 
+               activation='relu',
+               padding="same", 
+               input_shape=(None, None, 3)))
+    model.add(Dropout(0.25)) 
+
+    # layer 2
+    model.add(
+        Conv2D(128, (5, 5),
+               activation='relu',
+               strides=(2, 2),
+               padding="same"
+              ))
+
+    # later 3
+    model.add(
+        Conv2D(256, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(Dropout(0.25)) 
+
+    # layer 4
+    model.add(
+        Conv2D(128, (5, 5),
+               activation='relu',
+               strides=(2, 2),
+               padding="same"))
+
+    
+    model.add(Activation('softmax'))
+
+    return model
+
+def max_pooling_model():
+    # with relu from keras import backend as K
+    nclasses = 2
+    model = Sequential()
+    pool_size = (2, 2)
+
+    # layer 1
+    model.add(
+        Conv2D(32, (11, 11), 
+               activation='relu',
+               padding="same", 
+               input_shape=(None, None, 3)))
+    model.add(Dropout(0.25)) 
+
+    # layer 2
+    model.add(
+        Conv2D(48, (5, 5),
+               activation='relu',
+               strides=(1, 1),
+               padding="same"
+              ))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+
+    # later 3
+    model.add(
+        Conv2D(48, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(Dropout(0.25)) 
+
+    # layer 4
+    model.add(
+        Conv2D(48, (5, 5),
+               activation='relu',
+               strides=(1, 1),
+               padding="same"))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+
+    # layer 5
+    model.add(
+        Conv2D(48, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(Dropout(0.25)) 
+
+    # layer 6
+    model.add(
+        Conv2D(64, (5, 5), 
+               activation='relu',
+               strides=(1, 1),
+               padding="same"))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+
+    # layer 7
+    model.add(
+        Conv2D(64, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(Dropout(0.25)) 
+
+    # layer 8
+    model.add(
+        Conv2D(2, (5, 5), 
+               activation='relu',
+               padding="same"))
+
+    model.add(Activation('softmax'))
+
+    return model
+
+def leaky_relu_model():
+    nclasses = 2
+    model = Sequential()
+
+    # layer 1
+    model.add(
+        Conv2D(32, (11, 11), 
+               padding="same", 
+               input_shape=(None, None, 3)))
+    model.add(Dropout(0.25)) 
+    model.add(LeakyReLU(alpha=0.1))
+
+    # layer 2
+    model.add(
+        Conv2D(48, (5, 5),
+               strides=(2, 2),
+               padding="same"
+              ))
+    model.add(LeakyReLU(alpha=0.1))
+
+    # later 3
+    model.add(
+        Conv2D(48, (5, 5), 
+               padding="same")) 
+    model.add(Dropout(0.25)) 
+    model.add(LeakyReLU(alpha=0.1))
+
+    # layer 4
+    model.add(
+        Conv2D(48, (5, 5),
+               strides=(2, 2),
+               padding="same"))
+    model.add(LeakyReLU(alpha=0.1))
+
+    # layer 5
+    model.add(
+        Conv2D(48, (5, 5), 
+               padding="same")) 
+    model.add(Dropout(0.25)) 
+    model.add(LeakyReLU(alpha=0.1))
+
+    # layer 6
+    model.add(
+        Conv2D(64, (5, 5), 
+               strides=(2, 2),
+               padding="same"))
+    model.add(LeakyReLU(alpha=0.1))
+
+    # layer 7
+    model.add(
+        Conv2D(64, (5, 5), 
+               padding="same")) 
+    model.add(Dropout(0.25)) 
+    model.add(LeakyReLU(alpha=0.1))
+
+    # layer 8
+    model.add(
+        Conv2D(2, (5, 5), 
+               padding="same"))
+    model.add(LeakyReLU(alpha=0.1))
+
+    model.add(Activation('softmax'))
+    return model
+
+
+def decreased_dropout_model():
+# with relu from keras import backend as K
+    nclasses = 2
+    model = Sequential()
+
+    # layer 1
+    model.add(
+        Conv2D(32, (11, 11), 
+               activation='relu',
+               padding="same", 
+               input_shape=(None, None, 3)))
+    model.add(Dropout(0.1)) 
+
+    # layer 2
+    model.add(
+        Conv2D(48, (5, 5),
+               activation='relu',
+               strides=(2, 2),
+               padding="same"
+              ))
+
+    # later 3
+    model.add(
+        Conv2D(48, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(Dropout(0.1)) 
+
+    # layer 4
+    model.add(
+        Conv2D(48, (5, 5),
+               activation='relu',
+               strides=(2, 2),
+               padding="same"))
+
+    # layer 5
+    model.add(
+        Conv2D(48, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(Dropout(0.1)) 
+
+    # layer 6
+    model.add(
+        Conv2D(64, (5, 5), 
+               activation='relu',
+               strides=(2, 2),
+               padding="same"))
+
+    # layer 7
+    model.add(
+        Conv2D(64, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(Dropout(0.1)) 
+
+    # layer 8
+    model.add(
+        Conv2D(2, (5, 5), 
+               activation='relu',
+               padding="same"))
+
+    model.add(Activation('softmax'))
+
+    return model
 
 def model1():
     # wiht leaky relu
