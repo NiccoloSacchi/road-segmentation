@@ -39,8 +39,6 @@ def load_images_range(start, end):
     
     return  np.array([load_image(image_dir + images[i]) for i in range(start,end)]), \
             np.array([load_image(gt_image_dir + gt_images[i]) for i in range(start,end)])
-
- 
     
 def load_images(n=100):
     """ 

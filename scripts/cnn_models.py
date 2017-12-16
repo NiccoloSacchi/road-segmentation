@@ -31,6 +31,7 @@ import json
 from types import SimpleNamespace 
 
 from preprocessing import *
+from postprocessing import prediction_to_class
 import imageio
 from mask_to_submission import *
 
@@ -60,25 +61,26 @@ class CnnModel:
     def predict_and_export(self):
         threshold = 0.5
         filename_list = []
-        for batch_idx in range(10):
+        for batch_idx in range(1):
             images = load_images_to_predict(batch_idx*5,batch_idx*5+5)
             predictions = self.model.predict(images)
-            img_matrix = np.zeros([predictions.shape[0],predictions.shape[1],predictions.shape[2]])
             
-            print(img_matrix.shape)
+#             img_matrix = np.zeros([predictions.shape[0],predictions.shape[1],predictions.shape[2]])
+            
+#             print(img_matrix.shape)
             for i in range(predictions.shape[0]):
-                for row in range(predictions.shape[1]):
-                    for col in range (predictions.shape[2]):
-                        if  predictions[i][row][col][1]>threshold :
-                            img_matrix[i][row][col] = 1.0
-                        else:
-                            img_matrix[i][row][col] = 0.0
-                       
+#                 for row in range(predictions.shape[1]):
+#                     for col in range (predictions.shape[2]):
+#                         if  predictions[i][row][col][1]>threshold :
+#                             img_matrix[i][row][col] = 1.0
+#                         else:
+#                             img_matrix[i][row][col] = 0.0
+               
                 img_idx = batch_idx*5+i+1
                 filename = "../dataset/test_set_images/test_"+str(img_idx)+"/gt"+str(img_idx)
                 ext = ".jpg"
-                im=img_matrix[i]
-                imageio.imwrite(filename+ext, im)
+                pred = prediction_to_class(predictions[i], threshold = threshold) 
+                imageio.imwrite(filename+ext, pred)
                 filename_list.append(filename+ext)
         
         masks_to_submission("submission.csv",filename_list)
