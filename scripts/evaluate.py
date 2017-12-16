@@ -8,14 +8,7 @@ from keras import backend as K
 from tf_aerial_images import make_img_overlay
 from matplotlib.ticker import MaxNLocator
 
-# TODO fix this function
-def display_prediction(img, prediction, ax=None):
-    """ Display predictions on the image. 
-        img: original image. shape=(W, H, 3)
-        prediction: prediction image (with restepct to the input image it is reduced by 
-                a factor of n on each side). shape=(W/n, H/n)
-    """
-    def predictions_to_img(Y, size):
+def predictions_to_img(Y, size):
         """ From the matrix with the predicted patches build an image of the given size 
             size=(height, width). """
         # how many times we have to repeat h
@@ -29,6 +22,13 @@ def display_prediction(img, prediction, ax=None):
 
         gt_img = np.repeat(np.repeat(Y, h_times, axis=0), w_times, axis=1)
         return gt_img
+    
+def display_prediction(img, prediction, ax=None):
+    """ Display predictions on the image. 
+        img: original image. shape=(W, H, 3)
+        prediction: prediction image (with restepct to the input image it is reduced by 
+                a factor of n on each side). shape=(W/n, H/n)
+    """
     
     h, w = img.shape[0], img.shape[1] # 608, 608 for test set
 
