@@ -89,6 +89,19 @@ def img_crop_matr(img, patch_width=PATCH_WIDTH):
                 patches[i, j] = img[h_start:h_end, w_start:w_end, :]
     return patches
 
+def gt_img_to_Y(gt_img, predict_patch_width=PATCH_WIDTH):
+        """ Reshape the groundtruth images: given the patch width convert each patch into either 
+            0 or 1 and return the obtained matrix (groundtruth of smaller size) after converting 
+            it to categorical (1 -> [0, 1], 0 -> [1, 0]). """
+        gt_matr = img_crop_matr(gt_img, predict_patch_width)
+        Y = np.zeros((gt_matr.shape[0], gt_matr.shape[1], 2)) # keep width and heigth but convert the patch to a class
+        
+        for i in range(Y.shape[0]):
+            for j in range(Y.shape[1]):
+                Y[i, j, 1] = value_to_class(np.mean(gt_matr[i, j]))
+                Y[i, j, 0] = 1-Y[i, j, 1]
+        return Y#np_utils.to_categorical(Y, 2).astype('float32') #np_utils.to_categorical(Y, 2) ot np.expand_dims(Y, axis=3)
+    
 def images_to_XY(imgs, gt_imgs, predict_patch_width=PATCH_WIDTH):
     """ Convert the images to the required format so that they can be fed to the cnn. 
         predict_patch_width: is the with of the patch you want to predict (it must be 
@@ -120,6 +133,25 @@ def value_to_class(v):
     else:
         return 0
     
+def rotate_image(img, degrees, reshape=True):
+    """ Efficiently rotate an imagefrom sklearn.metrics import f1_score
+        img: images that has to be rotated
+        degrees: rotation of the image
+    """
+    # transform degrees in a positive number in [0, 360]
+    while degrees < 0:
+        degrees = degrees+360
+    while degrees > 360:
+        degrees = degrees-360
+        
+    if degrees == 0:
+        return img
+    if (degrees % 90) == 0:
+        # much faster with numpy
+        return np.rot90(img, k=int(degrees/90), axes=(0, 1))
+    return rotate(img, degrees, axes=(0,1), reshape=reshape, order=1, mode="reflect")
+    
+
 # def rand_augment_images(imgs, gt_imgs):
 #     """ Apply a random augmentation to the images """
     
