@@ -3,6 +3,7 @@
 import numpy as np
 from scipy.ndimage import rotate
 from sklearn.metrics import f1_score
+from preprocessing import rotate_image
 
 def predictions_to_class(predictions, threshold = 0.5):
     """ Given a list of predictions convert each one of them with 'prediction_to_class' """
@@ -19,25 +20,6 @@ def prediction_to_class(prediction, threshold = 0.5):
     mask_roads = prediction[:, :, 1] > threshold
     final_prediction[mask_roads] = 1.0
     return final_prediction
-
-def rotate_image(img, degrees):
-    """ Efficiently rotate an imagefrom sklearn.metrics import f1_score
-        img: images that has to be rotated
-        degrees: rotation of the image
-    """
-
-    # transform degrees in a positive number in [0, 360]
-    while degrees < 0:
-        degrees = degrees+360
-    while degrees > 360:
-        degrees = degrees-360
-        
-    if degrees == 0:
-        return img
-    if (degrees % 90) == 0:
-        # much faster with numpy
-        return np.rot90(img, k=int(degrees/90), axes=(0, 1))
-    return rotate(img, degrees, reshape=True, order=1, mode="reflect")
 
 def take_image_at_center(img, target_shape):
     """ Given an image and a target shape, drops the borders to take the inner image of the given size.

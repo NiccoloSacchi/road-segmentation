@@ -54,6 +54,9 @@ class CnnModel:
             'val_loss': []
         }
         
+        self.predict_patch_width = 8
+
+            
         if not os.path.exists(model_path):
             os.makedirs(model_path)
         self.model_path=model_path
@@ -167,8 +170,8 @@ class CnnModel:
     def train(self, train, test=None, num_epochs=10, batch_size=5, monitor='val_loss', save_history=True):
         """ Train the model with the train set (train.X and train.Y).
             -train: a structure where train.X are the input images and train.Y are the true
-                predictions
-            -train: if !=None, we also validate the model at each epoch on this test set.
+                predictions. For both train and test: X.shape=(W, H, 3), Y.shape=(W, H,)
+            -test: if !=None, we also validate the model at each epoch on this test set.
             -num_epochs: number of epoch to train the model
             -batch_size: number of images in each batch
             -monitor: {'loss', 'acc', 'val_loss', 'val_acc', ''}, indicate which parameter we should 
@@ -177,7 +180,7 @@ class CnnModel:
                 N.B. If you don't pass any 'test' set then monitor parameter should be in {'loss', 'acc'}
         """
         self.compile()
-        
+                
         # use a callback to save the best model (best model = the one with the best 'monitor' variable)
         # could also add "-{epoch:03d}-{loss:.4f}-{acc:.4f}" to the name
         callbacks_list = []
@@ -188,14 +191,14 @@ class CnnModel:
 
         # we compute steps_per_epoch so that all the images are used for every epoch
         steps_per_epoch = np.ceil(train.X.shape[0]/batch_size).astype("int")
-
+        true_labels = np.array([gt_img_to_Y(y, predict_patch_width=self.predict_patch_width) for y in test.Y])
         try:
             hist = self.model.fit_generator(
                 batches_generator(train.X, train.Y, batch_size = batch_size),
                 steps_per_epoch=steps_per_epoch, # number of batches to train on at each epoch
                 epochs=num_epochs,
                 verbose=1,
-                validation_data=(None if test==None else (test.X, np_utils.to_categorical(test.Y, 2))),
+                validation_data=(None if test==None else (test.X, true_labels)),
                 callbacks=callbacks_list
             )
             if save_history == True:
@@ -334,7 +337,8 @@ class CnnModel:
     def evaluate_model(self, X, Y):
         """ Evaluate the model oh the given data """
         pred = self.model.predict_classes(X).flatten()
-        true = Y.flatten()
+        true = np.array([gt_img_to_Y(y, predict_patch_width=self.predict_patch_width)[:, :, 1] for y in Y]).flatten()
+#         true = gt_img_to_Y(Y, predict_patch_width=self.predict_patch_width).flatten()
 #         true = np.argmax(Y, axis=len(Y.shape)-1).flatten()
         evaluate_predictions(pred, true)
         
@@ -385,134 +389,49 @@ class CnnModel:
     def load_weights(self, file):
         """ Load  from the given file the weights to the current model """
         self.model.load_weights(self.model_path + "/" + file)
-        
-   
-        
-        
-def image_generators(X, Y):
-    """ 
-        Given the input images (X), their groundtruth (Y) returns two generators. 
-        Both the generators return two images per time (respectively the input 
-        image and the relative groundtruth). 
-        Both the generators augment the images by randomly applying horizontal flip, 
-        zoom (to improve prediction of wider and thinner roads) and filling the points 
-        outside the boundaries by mirroring the images. 
-        The two generators differ in the rotation: the first generator rotates the images
-        of degrees 90*k (where k=0,1,2,3), the second generator rotates the images 
-        of any degree. """
-    # TODO does it makes sense to shift (probably not)?
-    #     width_shift_range=0.1,
-    #     height_shift_range=0.1,
-    # TODO do we want to normalize the input? (requires the .fit call to compute mean and std)
-    # normalize with featurewise_center and featurewise_std_normalization
-    #     samplewise_center=True,
-    #     samplewise_std_normalization=True
-        # # Provide the same seed and keyword arguments to the fit and flow methods
-        # image_datagen.fit(X, augment=True, seed=seed)
-        # mask_datagen.fit(Y, augment=True, seed=seed)
-    
-    batch_size = 1 # take one image per time
-    Y = np.expand_dims(Y, axis=3) # "wrap" each pixel in a numpy array
 
-    ### 1. generator with rotations of 90*k 
-    # use a seed so to apply the same transformation to both the input image (X) and the 
-    # groundtruth (Y)
-    seed = 5
-    
-    data_gen_args = dict(    
-        zoom_range=[0.8, 1.2],
-        horizontal_flip=True,
-        fill_mode="reflect"
-    )
-
-    image_datagen = ImageDataGenerator(**data_gen_args)
-    mask_datagen = ImageDataGenerator(**data_gen_args)
-    # combine generators into one which yields image and masks
-    image_generator = image_datagen.flow(X, batch_size=batch_size, seed=seed)
-    mask_generator = mask_datagen.flow(Y, batch_size=batch_size, seed=seed)
-    
-    generator_no_rot = zip(image_generator, mask_generator)
-    
-    def generator_rot90k():
-#         print("entered generator_rot90k (should happen just one time)")
-        # take the generator with no rotation and apply a rotation of 90*k
-        for x, y in generator_no_rot:
-            k = np.random.randint(4)
-            x_rot = np.rot90(x[0], k=k, axes=(0, 1))
-            y_rot = np.rot90(y[0], k=k, axes=(0, 1))
-            yield x_rot, y_rot
-    
-     ### 2. generator with any rotation
-    seed = 4
-    data_gen_args["rotation_range"] = 360 # add the rotation parameter
-    
-    image_datagen = ImageDataGenerator(**data_gen_args)
-    mask_datagen = ImageDataGenerator(**data_gen_args)
-    # combine generators into one which yields image and masks
-    image_generator = image_datagen.flow(X, batch_size=batch_size, seed=seed)
-    mask_generator = mask_datagen.flow(Y, batch_size=batch_size, seed=seed)
-    generator_rot360_ = zip(image_generator, mask_generator)
-    
-    def generator_rot360():
-        # just change the shape of the output (instead of returning a batch
-        # with only one image retutn that image)
-        for x, y in generator_rot360_:
-            yield x[0], y[0]
-        
-    return generator_rot90k(), generator_rot360()
-
-def batches_generator(X, Y, batch_size=4):
+def batches_generator(imgs, gt_imgs, batch_size=4):
     """ Combine the two generators obtainef from image_generators to obtain 
         the batch generator used during training.
-        X, Y: input and output images
-        prob_gen1: probability of using gen1 to generate the next batch. 
+        imgs, gt_imgs: input and output images. imgs.shape=(#images, W, H, 3). gt_imgs.shape=(#images, W, H,)
         batch_size: number of images in each batch. """
     
-    gen1, gen2 = image_generators(X, Y) 
-    prob_gen1 = 0.8
+    predict_patch_width = 8 # used to convert the Y to the correct shape
+#     gen1, gen2 = image_generators(imgs, gt_imgs) 
+    prob_90k = 0.8 # probability of rotating by a multiple of 90°
+    im_index = 0 # image index used to scan over the images in order
     
-    x, y = next(gen1) # just to take the shape of x and y
-    while 1:
-        # generate the batch
-        batch_x = np.zeros((np.append(batch_size, x.shape))).astype('float32')
-        batch_y = np.zeros((np.append(batch_size, y.shape))).astype('float32')
+    y_height= int(gt_imgs.shape[1]/predict_patch_width)
+    y_width = int(gt_imgs.shape[2]/predict_patch_width)
+    # initialize the batch
+    
+    while 1:    
+        batch_x = np.zeros((batch_size, imgs.shape[1], imgs.shape[2], imgs.shape[3])).astype('float32')
+        batch_y = np.zeros((batch_size, y_height, y_width, 2)).astype('float32')
         
         for i in range(batch_size):
-            if np.random.rand()<prob_gen1:
-                # then use gen1
-                bx, by = next(gen1)
-#                 print("gen1: generated images: ", bx.shape, by.shape)
-                batch_x[i], batch_y[i] = bx, by
-            else:
-                bx, by = next(gen2)
-#                 print("gen2: generated images: ", bx.shape, by.shape)
-                batch_x[i], batch_y[i] = bx, by
-                
-#         print("Generated x and y batch of sizes: ", batch_x.shape, batch_y.shape, batch_y.dtype, batch_x.dtype)
-        yield batch_x, np_utils.to_categorical(batch_y, 2).astype('float32') # convert Y to categorical (each pixel is either [1, 0] or [0, 1])
+             # do we flip?
+            flip = np.random.rand() < 0.5        
+            x = np.flip(imgs[im_index], axis=1) if flip else imgs[im_index]
+            y = np.flip(gt_imgs[im_index], axis=1) if flip else gt_imgs[im_index]
             
-# def batches_generator(batch_size, train):
-#     """ This function returns a generator to generate an infinite number of batches
-#         from train.imgs and train.gt_imgs which are randomly augmented (randomly 
-#         flipped and rotated) every time a batch is created.
-#     """
-#     indices = np.arange(train.X.shape[0])
-#     while 1:
-#         # shuffle the images
-#         shuffled = np.random.permutation(indices)
-#         if len(shuffled)%batch_size != 0:
-#             # pad shuffled so that it is a multiple of batch_size
-#             remaining = len(shuffled)%batch_size
-#             shuffled = np.concatenate((shuffled, np.random.choice(indices, size=remaining, replace=False)))
-
-#         for i in range(0, len(shuffled), batch_size):
-#             # take the images and the respective groundtruth for the current batch
-#             batch_images = shuffled[i:i+batch_size]
-#             # augment them randomly (flip + rotation)
-#             inputs, targets = rand_augment_images(train.X[batch_images], train.Y[batch_images])
-
-# #             print("\nbatch generated: ", inputs.shape, targets.shape)
-#             yield (inputs, targets)
+#             # do we rotate by 90k?
+            rot_90k = np.random.rand() < prob_90k 
+            degrees = np.random.randint(0, 4)*90 if rot_90k else np.random.randint(0, 360)
+            x = rotate_image(x, degrees, reshape=False)
+            y = rotate_image(y, degrees, reshape=False)
+            
+            # update the index (next image)
+            im_index += 1
+            if im_index>=imgs.shape[0]:
+                im_index = 0
+                
+            batch_x[i], batch_y[i] = x, gt_img_to_Y(y, predict_patch_width=predict_patch_width)
+    
+        print("Generated x and y batch of sizes: ", batch_x.shape, batch_y.shape, batch_y.dtype, batch_x.dtype)
+        yield batch_x, batch_y # convert Y to categorical (each pixel is either [1, 0] or [0, 1])
+            
+            
 def additional_conv_layer_model():
     # with relu from keras import backend as K
     nclasses = 2
@@ -972,7 +891,7 @@ def model_leakyrelu_maxpooling():
     
     # layer 1
     model.add(
-        Conv2D(48, (7, 7), 
+        Conv2D(64, (7, 7), 
                padding="same", 
                input_shape=(None, None, 3)))
     model.add(LeakyReLU(alpha=0.1))
@@ -981,7 +900,7 @@ def model_leakyrelu_maxpooling():
 
     # layer 2
     model.add(
-        Conv2D(64, (5, 5),
+        Conv2D(128, (5, 5),
                padding="same"
               ))
     model.add(LeakyReLU(alpha=0.1))
@@ -998,7 +917,7 @@ def model_leakyrelu_maxpooling():
 
     # layer 4
     model.add(
-        Conv2D(256, (5, 5), 
+        Conv2D(64, (5, 5), 
                padding="same")) 
     model.add(LeakyReLU(alpha=0.1))
     model.add(Dropout(0.20)) 
@@ -1021,7 +940,7 @@ def model_relu_maxpooling():
     
     # layer 1
     model.add(
-        Conv2D(48, (7, 7), 
+        Conv2D(64, (7, 7), 
                padding="same", 
                activation='relu',
                input_shape=(None, None, 3)))
@@ -1030,7 +949,7 @@ def model_relu_maxpooling():
 
     # layer 2
     model.add(
-        Conv2D(64, (5, 5),
+        Conv2D(128, (5, 5),
                padding="same",
                activation='relu',
               ))
@@ -1047,7 +966,7 @@ def model_relu_maxpooling():
 
     # layer 4
     model.add(
-        Conv2D(256, (5, 5), 
+        Conv2D(64, (5, 5), 
                activation='relu',
                padding="same")) 
     model.add(Dropout(0.20)) 
