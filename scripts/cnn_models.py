@@ -43,8 +43,8 @@ class CnnModel:
                 the model, the current weights and its history will be saved in this path.
             """
         # here the list of the functions that create a model
-        models = [model1, model2,additional_conv_layer_model,many_filters_model,max_pooling_model,leaky_relu_model,decreased_dropout_model] 
-        self.model_names = ["model1","model2","additional_conv_layer","many_filters","max_pooling","leaky_relu_model","decreased_dropout"]
+        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model] 
+        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters"]
         self.model_idx = model_n
         self.model = models[model_n]() 
         self.history = {
@@ -276,7 +276,7 @@ class CnnModel:
         """ Plot the history of the model (loss and accuracies obtained duting the training).
             If last_epochs!=-1 then plot only the last give number of epochs
         """
-        plot_history(self.history, last_epochs=last_epochs)        
+        plot_history(self.history,self.name(), last_epochs=last_epochs)    
             
     def show_layer_output(self, image, layer_num, filename=""):
         """ Use this function to plot the output (activations) of a layer. 
@@ -336,14 +336,14 @@ class CnnModel:
     
         # serialize model to JSON and save it to file
         model_json = self.model.to_json()
-        with open(self.model_path+"/model.json", "w") as json_file:
+        with open(self.model_path+"/model-"+self.name()+".json", "w") as json_file:
             json_file.write(model_json)
             
         # serialize weights to HDF5 and save them to file
-        self.model.save_weights(self.model_path+"/weights.h5")
+        self.model.save_weights(self.model_path+"/weights-"+self.name()+".h5")
         
         # serialize the history to json and store it
-        with open(self.model_path + '/history.json', 'w') as file:
+        with open(self.model_path + '/history-'+self.name()+'.json', 'w') as file:
             file.write(json.dumps(self.history, indent=4))
         
         print("Saved model to disk")
@@ -352,16 +352,16 @@ class CnnModel:
         """ Loads model, weights and history stored in 'dirpath' """
         
         # load json and create model
-        json_file = open(self.model_path+'/model.json', 'r')
+        json_file = open(self.model_path+'/model-'+self.name()+'.json', 'r')
         loaded_model_json = json_file.read()
         json_file.close()
         self.model = model_from_json(loaded_model_json)
         
         # load weights into new model
-        self.model.load_weights(self.model_path + "/weights.h5")
+        self.model.load_weights(self.model_path + "/weights-"+self.name()+".h5")
         
         # reset the history (note: we are not storing the history)
-        with open(self.model_path + '/history.json', 'r') as file:
+        with open(self.model_path + '/history-'+self.name()+'.json', 'r') as file:
             self.history = json.loads(file.read())
         
         print("Loaded model from disk")    
@@ -573,36 +573,42 @@ def many_filters_model():
     # with relu from keras import backend as K
     nclasses = 2
     model = Sequential()
+    pool_size = (2, 2)
 
     # layer 1
     model.add(
         Conv2D(64, (11, 11), 
                activation='relu',
                padding="same", 
+               strides=(2, 2),
                input_shape=(None, None, 3)))
     model.add(Dropout(0.25)) 
 
     # layer 2
     model.add(
-        Conv2D(128, (5, 5),
+        Conv2D(64, (5, 5),
                activation='relu',
                strides=(2, 2),
                padding="same"
               ))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
 
-    # later 3
+    # layer 2
     model.add(
-        Conv2D(256, (5, 5), 
+        Conv2D(64, (5, 5),
                activation='relu',
-               padding="same")) 
-    model.add(Dropout(0.25)) 
+               strides=(2, 2),
+               padding="same"
+              ))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
 
     # layer 4
     model.add(
-        Conv2D(128, (5, 5),
+        Conv2D(2, (5, 5),
                activation='relu',
                strides=(2, 2),
                padding="same"))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
 
     
     model.add(Activation('softmax'))
@@ -688,8 +694,8 @@ def leaky_relu_model():
         Conv2D(32, (11, 11), 
                padding="same", 
                input_shape=(None, None, 3)))
-    model.add(Dropout(0.25)) 
     model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.25)) 
 
     # layer 2
     model.add(
@@ -703,8 +709,8 @@ def leaky_relu_model():
     model.add(
         Conv2D(48, (5, 5), 
                padding="same")) 
-    model.add(Dropout(0.25)) 
     model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.25)) 
 
     # layer 4
     model.add(
@@ -717,8 +723,8 @@ def leaky_relu_model():
     model.add(
         Conv2D(48, (5, 5), 
                padding="same")) 
-    model.add(Dropout(0.25)) 
     model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.25)) 
 
     # layer 6
     model.add(
@@ -731,8 +737,8 @@ def leaky_relu_model():
     model.add(
         Conv2D(64, (5, 5), 
                padding="same")) 
-    model.add(Dropout(0.25)) 
     model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.25)) 
 
     # layer 8
     model.add(
