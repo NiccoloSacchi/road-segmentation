@@ -976,6 +976,7 @@ def model_leakyrelu_maxpooling():
                padding="same", 
                input_shape=(None, None, 3)))
     model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
     model.add(Dropout(0.20)) 
 
     # layer 2
@@ -1000,7 +1001,6 @@ def model_leakyrelu_maxpooling():
         Conv2D(64, (5, 5), 
                padding="same")) 
     model.add(LeakyReLU(alpha=0.1))
-    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
     model.add(Dropout(0.20)) 
 
     # layer 5
@@ -1025,6 +1025,7 @@ def model_relu_maxpooling():
                padding="same", 
                activation='relu',
                input_shape=(None, None, 3)))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
     model.add(Dropout(0.20)) 
 
     # layer 2
@@ -1049,7 +1050,6 @@ def model_relu_maxpooling():
         Conv2D(64, (5, 5), 
                activation='relu',
                padding="same")) 
-    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
     model.add(Dropout(0.20)) 
 
     # layer 5
