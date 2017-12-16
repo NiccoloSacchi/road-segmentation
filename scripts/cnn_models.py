@@ -43,8 +43,8 @@ class CnnModel:
                 the model, the current weights and its history will be saved in this path.
             """
         # here the list of the functions that create a model
-        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model] 
-        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters"]
+        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model, model_leakyrelu_maxpooling, model_relu_maxpooling] 
+        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters", "model_leakyrelu_maxpooling", "model_relu_maxpooling"]
         self.model_idx = model_n
         self.model = models[model_n]() 
         self.history = {
@@ -76,6 +76,22 @@ class CnnModel:
 #                         else:
 #                             img_matrix[i][row][col] = 0.0
                
+                img_idx = batch_idx*5+i+1
+                filename = "../dataset/test_set_images/test_"+str(img_idx)+"/gt"+str(img_idx)
+                ext = ".jpg"
+                pred = prediction_to_class(predictions[i], threshold = threshold) 
+                imageio.imwrite(filename+ext, pred)
+                filename_list.append(filename+ext)
+        
+        masks_to_submission("submission.csv",filename_list)
+        
+    def predict_augmented_and_export(self):
+        threshold = 0.5
+        filename_list = []
+        for batch_idx in range(1):
+            images = load_images_to_predict(batch_idx*5,batch_idx*5+5)
+            predictions = self.model.predict(images)
+            for i in range(predictions.shape[0]):              
                 img_idx = batch_idx*5+i+1
                 filename = "../dataset/test_set_images/test_"+str(img_idx)+"/gt"+str(img_idx)
                 ext = ".jpg"
@@ -465,14 +481,14 @@ def batches_generator(X, Y, batch_size=4):
             if np.random.rand()<prob_gen1:
                 # then use gen1
                 bx, by = next(gen1)
-                print("gen1: generated images: ", bx.shape, by.shape)
+#                 print("gen1: generated images: ", bx.shape, by.shape)
                 batch_x[i], batch_y[i] = bx, by
             else:
                 bx, by = next(gen2)
-                print("gen2: generated images: ", bx.shape, by.shape)
+#                 print("gen2: generated images: ", bx.shape, by.shape)
                 batch_x[i], batch_y[i] = bx, by
                 
-        print("Generated x and y batch of sizes: ", batch_x.shape, batch_y.shape, batch_y.dtype, batch_x.dtype)
+#         print("Generated x and y batch of sizes: ", batch_x.shape, batch_y.shape, batch_y.dtype, batch_x.dtype)
         yield batch_x, np_utils.to_categorical(batch_y, 2).astype('float32') # convert Y to categorical (each pixel is either [1, 0] or [0, 1])
             
 # def batches_generator(batch_size, train):
@@ -939,6 +955,104 @@ def model2():
     model.add(Dropout(0.25)) 
 
     # layer 8
+    model.add(
+        Conv2D(2, (5, 5), 
+               activation='relu',
+               padding="same"))
+
+    model.add(Activation('softmax'))
+
+    return model
+
+def model_leakyrelu_maxpooling():
+    # with relu from keras import backend as K
+    nclasses = 2
+    model = Sequential()
+    pool_size = (2,2)
+    
+    # layer 1
+    model.add(
+        Conv2D(64, (7, 7), 
+               padding="same", 
+               input_shape=(None, None, 3)))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.20)) 
+
+    # layer 2
+    model.add(
+        Conv2D(128, (5, 5),
+               padding="same"
+              ))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.20))
+
+    # later 3
+    model.add(
+        Conv2D(128, (5, 5), 
+               padding="same")) 
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.20)) 
+
+    # layer 4
+    model.add(
+        Conv2D(64, (5, 5), 
+               padding="same")) 
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.20)) 
+
+    # layer 5
+    model.add(
+        Conv2D(2, (5, 5), 
+               padding="same"))
+    model.add(LeakyReLU(alpha=0.1))
+
+    model.add(Activation('softmax'))
+
+    return model
+
+def model_relu_maxpooling():
+    # with relu from keras import backend as K
+    nclasses = 2
+    model = Sequential()
+    pool_size = (2,2)
+    
+    # layer 1
+    model.add(
+        Conv2D(64, (7, 7), 
+               padding="same", 
+               activation='relu',
+               input_shape=(None, None, 3)))
+    model.add(Dropout(0.20)) 
+
+    # layer 2
+    model.add(
+        Conv2D(128, (5, 5),
+               padding="same",
+               activation='relu',
+              ))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.20))
+
+    # later 3
+    model.add(
+        Conv2D(128, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.20)) 
+
+    # layer 4
+    model.add(
+        Conv2D(64, (5, 5), 
+               activation='relu',
+               padding="same")) 
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.20)) 
+
+    # layer 5
     model.add(
         Conv2D(2, (5, 5), 
                activation='relu',
