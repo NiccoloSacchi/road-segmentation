@@ -24,7 +24,7 @@ def display_prediction(img, prediction, ax=None):
         w_times = size[1]/Y.shape[1]
 
         if h_times%1 != 0 or w_times%1 != 0:
-            print("Impossible to build an image of the given size")
+            print("Impossible to build an image of the given size: current shape is", Y.shape, "target shape is", size)
             return None
 
         gt_img = np.repeat(np.repeat(Y, h_times, axis=0), w_times, axis=1)
