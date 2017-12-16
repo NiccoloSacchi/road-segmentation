@@ -54,7 +54,6 @@ train.X.shape, train.Y.shape, test.X.shape, test.Y.shape
 folder_name = "model_"+str('{0:%Y-%m-%d_%H%M%S}'.format(datetime.now()))
 
 
-from cnn_models import *
 #models = [
 #0          model1,
 #1          model2,
@@ -65,14 +64,16 @@ from cnn_models import *
 #6          many_filters_model, 
 #7          model_leakyrelu_maxpooling, 
 #8          model_relu_maxpooling] 
-models_to_train =  [7]
+models_to_train =  [7,8]
+set_ = test
+batch_sizes =[4,4,4,4,4,4,4,4,4]
 for i in models_to_train:
     # generate an unique name for the model (so to avoid overwriting previous models)
     model_path = "..\\models\\"+folder_name
     model = CnnModel(model_n=i, model_path=model_path)
     model.summary()
-    num_epochs=3
-    batch_size=2
+    num_epochs=2
+    batch_size=4
     _ = model.train(train, test=test, num_epochs=num_epochs, batch_size=batch_size, monitor='val_loss') 
     model.save()
     model.plot_history()
