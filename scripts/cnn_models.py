@@ -378,10 +378,10 @@ class CnnModel:
         self.model = model_from_json(loaded_model_json)
         
         # load weights into new model
-        self.model.load_weights(self.model_path + "/weights-"+self.name()+".h5")
+        self.model.load_weights(self.model_path + "\weights-"+self.name()+".h5")
         
         # reset the history (note: we are not storing the history)
-        with open(self.model_path + '/history-'+self.name()+'.json', 'r') as file:
+        with open(self.model_path + '\history-'+self.name()+'.json', 'r') as file:
             self.history = json.loads(file.read())
         
         print("Loaded model from disk")    
@@ -900,7 +900,7 @@ def model_leakyrelu_maxpooling():
 
     # layer 2
     model.add(
-        Conv2D(64, (5, 5),
+        Conv2D(64, (7, 7),
                padding="same"
               ))
     model.add(LeakyReLU(alpha=0.1))
@@ -989,7 +989,7 @@ def model_16x16leakyrelu_maxpooling():
     
     # layer 1
     model.add(
-        Conv2D(64, (10, 10), 
+        Conv2D(48, (10, 10), 
                padding="same", 
                input_shape=(None, None, 3)))
     model.add(LeakyReLU(alpha=0.1))
