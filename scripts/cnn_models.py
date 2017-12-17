@@ -378,10 +378,10 @@ class CnnModel:
         self.model = model_from_json(loaded_model_json)
         
         # load weights into new model
-        self.model.load_weights(self.model_path + "/weights-"+self.name()+".h5")
+        self.model.load_weights(self.model_path + "\weights-"+self.name()+".h5")
         
         # reset the history (note: we are not storing the history)
-        with open(self.model_path + '/history-'+self.name()+'.json', 'r') as file:
+        with open(self.model_path + '\history-'+self.name()+'.json', 'r') as file:
             self.history = json.loads(file.read())
         
         print("Loaded model from disk")    
@@ -891,21 +891,21 @@ def model_leakyrelu_maxpooling():
     
     # layer 1
     model.add(
-        Conv2D(48, (7, 7), 
+        Conv2D(48, (11, 11), 
                padding="same", 
                input_shape=(None, None, 3)))
     model.add(LeakyReLU(alpha=0.1))
     model.add(MaxPooling2D(padding="same",pool_size=pool_size))
-    model.add(Dropout(0.20)) 
+    model.add(Dropout(0.25)) 
 
     # layer 2
     model.add(
-        Conv2D(64, (5, 5),
+        Conv2D(64, (7, 7),
                padding="same"
               ))
     model.add(LeakyReLU(alpha=0.1))
     model.add(MaxPooling2D(padding="same",pool_size=pool_size))
-    model.add(Dropout(0.20))
+    model.add(Dropout(0.25))
 
     # later 3
     model.add(
@@ -913,14 +913,14 @@ def model_leakyrelu_maxpooling():
                padding="same")) 
     model.add(LeakyReLU(alpha=0.1))
     model.add(MaxPooling2D(padding="same",pool_size=pool_size))
-    model.add(Dropout(0.20)) 
+    model.add(Dropout(0.25)) 
 
     # layer 4
     model.add(
         Conv2D(256, (5, 5), 
                padding="same")) 
     model.add(LeakyReLU(alpha=0.1))
-    model.add(Dropout(0.20)) 
+    model.add(Dropout(0.25)) 
 
     # layer 5
     model.add(
