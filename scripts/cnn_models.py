@@ -428,7 +428,7 @@ def batches_generator(imgs, gt_imgs, batch_size=4):
                 
             batch_x[i], batch_y[i] = x, gt_img_to_Y(y, predict_patch_width=predict_patch_width)
     
-        print("Generated x and y batch of sizes: ", batch_x.shape, batch_y.shape, batch_y.dtype, batch_x.dtype)
+       # print("Generated x and y batch of sizes: ", batch_x.shape, batch_y.shape, batch_y.dtype, batch_x.dtype)
         yield batch_x, batch_y # convert Y to categorical (each pixel is either [1, 0] or [0, 1])
             
             
@@ -891,7 +891,7 @@ def model_leakyrelu_maxpooling():
     
     # layer 1
     model.add(
-        Conv2D(64, (7, 7), 
+        Conv2D(48, (7, 7), 
                padding="same", 
                input_shape=(None, None, 3)))
     model.add(LeakyReLU(alpha=0.1))
@@ -900,7 +900,7 @@ def model_leakyrelu_maxpooling():
 
     # layer 2
     model.add(
-        Conv2D(128, (5, 5),
+        Conv2D(64, (5, 5),
                padding="same"
               ))
     model.add(LeakyReLU(alpha=0.1))
@@ -917,7 +917,7 @@ def model_leakyrelu_maxpooling():
 
     # layer 4
     model.add(
-        Conv2D(64, (5, 5), 
+        Conv2D(256, (5, 5), 
                padding="same")) 
     model.add(LeakyReLU(alpha=0.1))
     model.add(Dropout(0.20)) 
