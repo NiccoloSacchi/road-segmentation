@@ -989,7 +989,7 @@ def model_16x16leakyrelu_maxpooling():
     
     # layer 1
     model.add(
-        Conv2D(64, (10, 10), 
+        Conv2D(48, (10, 10), 
                padding="same", 
                input_shape=(None, None, 3)))
     model.add(LeakyReLU(alpha=0.1))
