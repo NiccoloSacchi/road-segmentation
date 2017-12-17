@@ -43,8 +43,8 @@ class CnnModel:
                 the model, the current weights and its history will be saved in this path.
             """
         # here the list of the functions that create a model
-        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model, model_leakyrelu_maxpooling, model_relu_maxpooling] 
-        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters", "model_leakyrelu_maxpooling", "model_relu_maxpooling"]
+        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model, model_leakyrelu_maxpooling, model_relu_maxpooling, model_16x16leakyrelu_maxpooling] 
+        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters", "model_leakyrelu_maxpooling", "model_relu_maxpooling", "model_16x16leakyrelu_maxpooling"]
         self.model_idx = model_n
         self.model = models[model_n]() 
         self.history = {
@@ -55,7 +55,6 @@ class CnnModel:
         }
         
         self.predict_patch_width = 8
-
             
         if not os.path.exists(model_path):
             os.makedirs(model_path)
@@ -89,7 +88,8 @@ class CnnModel:
         masks_to_submission("submission.csv",filename_list)
         
     def predict_augmented_and_export(self):
-        threshold = 0.5
+        threshold = 0.55
+        print("Threshold:", threshold)
         filename_list = []
         for batch_idx in range(10):
             images = load_images_to_predict(batch_idx*5,batch_idx*5+5)
@@ -194,7 +194,7 @@ class CnnModel:
         true_labels = np.array([gt_img_to_Y(y, predict_patch_width=self.predict_patch_width) for y in test.Y])
         try:
             hist = self.model.fit_generator(
-                batches_generator(train.X, train.Y, batch_size = batch_size),
+                batches_generator(train.X, train.Y, batch_size = batch_size, predict_patch_width=self.predict_patch_width),
                 steps_per_epoch=steps_per_epoch, # number of batches to train on at each epoch
                 epochs=num_epochs,
                 verbose=1,
@@ -390,13 +390,13 @@ class CnnModel:
         """ Load  from the given file the weights to the current model """
         self.model.load_weights(self.model_path + "/" + file)
 
-def batches_generator(imgs, gt_imgs, batch_size=4):
+def batches_generator(imgs, gt_imgs, batch_size=4, predict_patch_width=8):
     """ Combine the two generators obtainef from image_generators to obtain 
         the batch generator used during training.
         imgs, gt_imgs: input and output images. imgs.shape=(#images, W, H, 3). gt_imgs.shape=(#images, W, H,)
-        batch_size: number of images in each batch. """
+        batch_size: number of images in each batch. 
+        predict_patch_width: used to convert the Y to the correct shape needed by the cnn"""
     
-    predict_patch_width = 8 # used to convert the Y to the correct shape
 #     gen1, gen2 = image_generators(imgs, gt_imgs) 
     prob_90k = 0.8 # probability of rotating by a multiple of 90°
     im_index = 0 # image index used to scan over the images in order
@@ -940,12 +940,12 @@ def model_relu_maxpooling():
     
     # layer 1
     model.add(
-        Conv2D(64, (7, 7), 
+        Conv2D(64, (11, 11), 
                padding="same", 
                activation='relu',
                input_shape=(None, None, 3)))
     model.add(MaxPooling2D(padding="same",pool_size=pool_size))
-    model.add(Dropout(0.20)) 
+    model.add(Dropout(0.25)) 
 
     # layer 2
     model.add(
@@ -954,7 +954,7 @@ def model_relu_maxpooling():
                activation='relu',
               ))
     model.add(MaxPooling2D(padding="same",pool_size=pool_size))
-    model.add(Dropout(0.20))
+    model.add(Dropout(0.25))
 
     # later 3
     model.add(
@@ -962,20 +962,70 @@ def model_relu_maxpooling():
                activation='relu',
                padding="same")) 
     model.add(MaxPooling2D(padding="same",pool_size=pool_size))
-    model.add(Dropout(0.20)) 
+    model.add(Dropout(0.25)) 
 
     # layer 4
     model.add(
         Conv2D(64, (5, 5), 
                activation='relu',
                padding="same")) 
-    model.add(Dropout(0.20)) 
+    model.add(Dropout(0.25)) 
 
     # layer 5
     model.add(
         Conv2D(2, (5, 5), 
                activation='relu',
                padding="same"))
+
+    model.add(Activation('softmax'))
+
+    return model
+
+def model_16x16leakyrelu_maxpooling():
+    # with relu from keras import backend as K
+    nclasses = 2
+    model = Sequential()
+    pool_size = (2,2)
+    
+    # layer 1
+    model.add(
+        Conv2D(64, (10, 10), 
+               padding="same", 
+               input_shape=(None, None, 3)))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.25)) 
+
+    # layer 2
+    model.add(
+        Conv2D(64, (7, 7),
+               padding="same"
+              ))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.25))
+
+    # later 3
+    model.add(
+        Conv2D(128, (5, 5), 
+               padding="same")) 
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.25)) 
+
+    # layer 4
+    model.add(
+        Conv2D(256, (5, 5), 
+               padding="same")) 
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.25)) 
+
+    # layer 5
+    model.add(
+        Conv2D(2, (5, 5), 
+               padding="same"))
+    model.add(LeakyReLU(alpha=0.1))
 
     model.add(Activation('softmax'))
 

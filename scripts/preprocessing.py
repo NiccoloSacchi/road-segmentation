@@ -50,10 +50,10 @@ def load_images(n=100):
     root_dir = "../dataset/training/"
     
     image_dir = root_dir + "images/"
-    images = os.listdir(image_dir)
+    images = sorted(os.listdir(image_dir))
     
     gt_image_dir = root_dir + "groundtruth/"
-    gt_images = os.listdir(gt_image_dir)
+    gt_images = sorted(os.listdir(gt_image_dir))
     
     return  np.array([load_image(image_dir + images[i]) for i in range(n)]), \
             np.array([load_image(gt_image_dir + gt_images[i]) for i in range(n)])
