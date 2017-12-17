@@ -18,4 +18,16 @@ The first techniques we studied involved feature extraction using interesing, st
 We started from three very simple baselines: (1) a model that predicts all as road (notice that, since the metric chosen is the F1 score computen the road predictions, a model that predicts all as background would have higher accuracy but an F1 score of zero), (2-3) we considereed each 16x16 patch as an input and for each one of them we produced 6 simple features extracted from the mean and the standard deviation of each RGB channel in the patch, the obtained dataset has been used to train a logistic regression and a random forest. The F1 scores of these three baselines is shown in Figure B. As expected, this analisys shows that those methods fails in this complex task if more advaced feture extraction is not in place.
 Therefore we  what regards CNNs, there are two main approaches: (1) design a CNN which direclty segment the input image and outputs the mask for theroads [cite Lis], (2) reduce the segmentation problem to classifying each patch, i.e. build a CNN that given as input a patch with its context (neighborhood of that patch) labels that patch as either road or background [cite dario]. We tried both the techniques but then opted and focused on (1) since it required almost no preprocoessing and showed better results. 
 
-classification vs segmentation (1 image, 1 label vs 1 image, several label)
+A. CNN design
+Our CNN takes as input an image of any size and outputs the estimated probability of being a road for each patch of that image. We tried both predicting 8x8 patch-wise and 16x16 patch-wise and observed better results when predictin KxK patch-wise. The structure of our CNN is depicted in Figure D. Sice we had problems with the memory of the GPU, we adopded convolutional layers of increasing number of filters so that the first layers whould have bigger inputs but less filters and the last layers would have smaller inputs but more filters (note that the output of a convolutional layer, when strides is 1x1 and padding is used, is H x W x #filters where H x W is the size of the input). After the convolutional layer we use the leaky relu as activation function since we experieced problemd od dead filter with the relu activaion filters, see Figure H. We used k max pooling layers with a pool size of 2x2 where 2^k is the size of the patch we wanted to predict, e.g. to predict 8x8 patch-wise we adopted 3 max pooling layers so to reduce the size of the input image by a factor of 8 on each side. Note that increasing the strides of the convolutional layer would lead to the same size reduction but we opted for max pooling so to automatically select the higher activations. Dropout... 
+
+B. Data augmentation
+We rotate and flip the images...
+
+C. Cross validation
+
+-Final results
+
+-Conclusions
+
+
