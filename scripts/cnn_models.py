@@ -43,8 +43,8 @@ class CnnModel:
                 the model, the current weights and its history will be saved in this path.
             """
         # here the list of the functions that create a model
-        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model, model_leakyrelu_maxpooling, model_relu_maxpooling, model_16x16leakyrelu_maxpooling] 
-        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters", "model_leakyrelu_maxpooling", "model_relu_maxpooling", "model_16x16leakyrelu_maxpooling"]
+        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model, model_leakyrelu_maxpooling, model_relu_maxpooling, model_16x16leakyrelu_maxpooling,model_4x4leakyrelu_maxpooling] 
+        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters", "model_leakyrelu_maxpooling", "model_relu_maxpooling", "model_16x16leakyrelu_maxpooling","model_4x4leakyrelu_maxpooling"]
         self.model_idx = model_n
         self.model = models[model_n]() 
         self.history = {
@@ -1027,6 +1027,55 @@ def model_16x16leakyrelu_maxpooling():
                padding="same"))
     model.add(LeakyReLU(alpha=0.1))
 
+    model.add(Activation('softmax'))
+
+    return model
+
+def model_4x4leakyrelu_maxpooling():
+
+    # with relu from keras import backend as K
+
+    nclasses = 2
+    model = Sequential()
+    pool_size = (2,2)
+
+    # layer 1
+    model.add(
+        Conv2D(48, (10, 10), 
+               padding="same", 
+               input_shape=(None, None, 3)))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.25)) 
+
+    # layer 2
+    model.add(
+        Conv2D(64, (7, 7),
+               padding="same"
+              ))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.25))
+    
+    # later 3
+    model.add(
+        Conv2D(128, (5, 5), 
+               padding="same")) 
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.25)) 
+
+    # layer 4
+    model.add(
+        Conv2D(128, (10, 10), 
+               padding="same")) 
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.25)) 
+
+    # layer 5
+    model.add(
+        Conv2D(2, (15, 15), 
+               padding="same"))
+    model.add(LeakyReLU(alpha=0.1))
     model.add(Activation('softmax'))
 
     return model
