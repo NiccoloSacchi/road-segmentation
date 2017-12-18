@@ -378,10 +378,10 @@ class CnnModel:
         self.model = model_from_json(loaded_model_json)
         
         # load weights into new model
-        self.model.load_weights(self.model_path + "\weights-"+self.name()+".h5")
+        self.model.load_weights(self.model_path + "/weights-"+self.name()+".h5")
         
         # reset the history (note: we are not storing the history)
-        with open(self.model_path + '\history-'+self.name()+'.json', 'r') as file:
+        with open(self.model_path + '/history-'+self.name()+'.json', 'r') as file:
             self.history = json.loads(file.read())
         
         print("Loaded model from disk")    
