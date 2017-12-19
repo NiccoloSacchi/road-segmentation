@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.2.15)  18 DEC 2017 12:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.2.15)  18 DEC 2017 15:05
 entering extended mode
 **./groupRoadSegmentationFault-submission.tex
 (groupRoadSegmentationFault-submission.tex
@@ -328,25 +328,25 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 34.
 
-<img/building.png, id=48, 410.2828pt x 410.2828pt>
+<img/building.png, id=52, 410.2828pt x 410.2828pt>
 File: img/building.png Graphic file (type png)
  <use img/building.png>
 Package pdftex.def Info: img/building.png used on input line 43.
 (pdftex.def)             Requested size: 101.17645pt x 101.17438pt.
 
-<img/highway.png, id=50, 410.2828pt x 409.53pt>
+<img/highway.png, id=54, 410.2828pt x 409.53pt>
 File: img/highway.png Graphic file (type png)
  <use img/highway.png>
 Package pdftex.def Info: img/highway.png used on input line 47.
 (pdftex.def)             Requested size: 101.17645pt x 100.98874pt.
 
-<img/trees.png, id=51, 410.2828pt x 410.2828pt>
+<img/trees.png, id=55, 410.2828pt x 410.2828pt>
 File: img/trees.png Graphic file (type png)
  <use img/trees.png>
 Package pdftex.def Info: img/trees.png used on input line 51.
 (pdftex.def)             Requested size: 101.17645pt x 101.17438pt.
 
-<img/parkinglot.png, id=52, 409.53pt x 409.53pt>
+<img/parkinglot.png, id=56, 409.53pt x 409.53pt>
 File: img/parkinglot.png Graphic file (type png)
  <use img/parkinglot.png>
 Package pdftex.def Info: img/parkinglot.png used on input line 55.
@@ -361,14 +361,14 @@ Underfull \hbox (badness 3260) in paragraph at lines 84--87
 
  <./img/building.png> <./img/highway.png> <./img/trees.png> <./img/parkinglot.p
 ng>]
-<img/boxplots_naive.png, id=74, 565.11125pt x 376.40625pt>
+<img/boxplots_naive.png, id=78, 565.11125pt x 376.40625pt>
 File: img/boxplots_naive.png Graphic file (type png)
 
 <use img/boxplots_naive.png>
 Package pdftex.def Info: img/boxplots_naive.png used on input line 95.
 (pdftex.def)             Requested size: 195.12975pt x 129.9694pt.
 
-<img/missing.png, id=75, 411.03563pt x 224.33812pt>
+<img/missing.png, id=79, 411.03563pt x 224.33812pt>
 File: img/missing.png Graphic file (type png)
  <use img/missing.png>
 Package pdftex.def Info: img/missing.png used on input line 104.
@@ -379,10 +379,17 @@ File: img/missing.png Graphic file (type png)
 Package pdftex.def Info: img/missing.png used on input line 111.
 (pdftex.def)             Requested size: 195.12975pt x 106.50009pt.
  [2 <./img/boxplots_naive.png> <./img/missing.png>]
-(groupRoadSegmentationFault-submission.bbl
+<img/data_augmentation.png, id=98, 1445.4pt x 1445.4pt>
+File: img/data_augmentation.png Graphic file (type png)
+
+<use img/data_augmentation.png>
+Package pdftex.def Info: img/data_augmentation.png used on input line 131.
+(pdftex.def)             Requested size: 195.12975pt x 195.12057pt.
+ (groupRoadSegmentationFault-submission.bbl
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <9> on input line 30.
 
+[3 <./img/data_augmentation.png>]
 Underfull \hbox (badness 3312) in paragraph at lines 37--40
 []\OT1/ptm/m/n/9 D. Pavllo, M. Mar-tinel-liy, and C. Hwang, ``Epfl ma-
  []
@@ -399,27 +406,27 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 185.
-[3
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 201.
+[4
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 185.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 201.
  (groupRoadSegmentationFault-submission.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 185.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 185.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 201.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 201.
 Package rerunfilecheck Info: File `groupRoadSegmentationFault-submission.out' h
 as not changed.
-(rerunfilecheck)             Checksum: DB003B993EC4298AD8CB5B5BF89C5F4A;536.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 185.
+(rerunfilecheck)             Checksum: B78EBCD34F03D0F10B63F30725079EE4;602.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 201.
  ) 
 Here is how much of TeX's memory you used:
- 6065 strings out of 493333
- 93254 string characters out of 3139194
- 184221 words of memory out of 3000000
- 9528 multiletter control sequences out of 15000+200000
+ 6075 strings out of 493333
+ 93461 string characters out of 3139194
+ 184484 words of memory out of 3000000
+ 9534 multiletter control sequences out of 15000+200000
  43285 words of font info for 81 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 28i,8n,28p,1237b,355s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 28i,8n,28p,1237b,458s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Program Files/Mi
 KTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9
 /fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
@@ -431,10 +438,10 @@ c/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts
 KTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/t
 ype1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/ut
 mri8a.pfb>
-Output written on groupRoadSegmentationFault-submission.pdf (3 pages, 1948857 b
+Output written on groupRoadSegmentationFault-submission.pdf (4 pages, 3838005 b
 ytes).
 PDF statistics:
- 146 PDF objects out of 1000 (max. 8388607)
- 23 named destinations out of 1000 (max. 500000)
- 111 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 159 PDF objects out of 1000 (max. 8388607)
+ 26 named destinations out of 1000 (max. 500000)
+ 124 words of extra memory for PDF output out of 10000 (max. 10000000)
 

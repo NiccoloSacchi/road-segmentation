@@ -12,7 +12,7 @@
 
 \author{
 	% Your name
-	\textsc{Niccol\`{o} Sacchi \& Valentin Nigolian} \\ %\thanks{A thank you or further information} \\[1ex] 
+	\textsc{Niccol\`{o} Sacchi \& Valentin Nigolian} \\ 
 	\normalsize{} \\
 	% Your supervisors
 	\textsc{Group:}
@@ -25,7 +25,7 @@
 
 \begin{abstract}
   The goal of this project is to segment satellite images in order to discriminate the roads from the background. Several approaches have been tried in the past, most of them required a lot of preprocessing and did not gained great performances. Invented in the late 20th century, the convolutional neural networks (CNNs) only recently were successfully applied to images classification and segmentation problems and performed considerably better than other techniques. 
-  The model we used in this project consists of a CNN whose input can be an image of any size and the output is the respective mask of roads (ground-truth). Our model makes use of on-fly data augmentation, Dropout layers, LeakyReLU activation functions to reduce overfitting and improve the training. Moreover, we adopted two simple but effective techniques to improve the predictions. We will also show that, according to our tests, our model outperforms the considered baselines. 
+  The model we used in this project consists of a CNN whose input can be an image of any size and the output is the respective mask of roads (ground-truth). Our model makes use of on-the-fly data augmentation, Dropout layers, LeakyReLU activation functions to reduce overfitting and improve the training. Moreover, we adopted two simple but effective techniques to improve the predictions. We will also show that, according to our tests, our model outperforms the considered baselines. 
 \end{abstract}
 
 \section{Introduction}
@@ -33,8 +33,8 @@ The segmentation problem can be defined as the problem of assigning a class labe
 The goal of this project is to segment the roads in satellite images so to extract the mask of the roads. The metric used to evaluate the prediction of the roads is the F1 score that combines the precision, i.e. the fraction of correctly predicted roads among all the predicted roads, and the recall, i.e. the fraction of correctly predicted roads among all the true roads. The formula of the F1 score is the following:
 $$F1=2\frac{pr}{p+r}$$ $$\textrm{where} \quad p=\frac{TP}{TP+FP} \textrm{,} \quad r=\frac{TP}{TP+FN}$$ 
 
-Only in recent years, thanks the increase in computing performance and the possibility to exploit GPUs to parallelize computation, CNNs were able outperform most of the techniques in solving different tasks, e.g. image classification, image segmentation, natural language processing, handwriting generation, automatic game playing and many others. The strengths of the CNNs derives from a hierarchy of filters which are learnt during the training phase. Thanks to these filters, the CNNs are capable of producing more and more complex features, i.e. high level representation of the input, as the image goes deeper in the network. However, a drawback of CNNs is the need of a large, fully-labeled dataset. This drawback can be compensated with data augmentation which has proven to be very effective on images. 
-In the following sections we will give an overview of the techniques we tried focusing in particular to the CNN we implemented and tuned. Section~\ref{sec:data-analysis} explains ..., Section~\ref{sec:models-methods} ..., Section~\ref{sec:Results} ..., Section~\ref{sec:Discussion} ..., Section~\ref{sec:Summary} ...
+Only in recent years, thanks the increase in computing performance and the possibility to exploit GPUs to parallelize computation, CNNs were able outperform most of the techniques in solving different tasks, e.g. image classification, image segmentation, natural language processing, handwriting generation, automatic game playing and many others. The strengths of the CNNs derives from a hierarchy of filters which are learnt during the training phase. Thanks to these filters, the CNNs are capable of producing more and more complex features, i.e. high level representation of the input, as the image goes deeper in the network. However, a drawback of CNNs is the need of a large, fully-labeled dataset. This drawback can be compensated with data augmentation. 
+In the following sections we will give an overview of the techniques we tried focusing in particular to the CNN we implemented and tuned. Section~\ref{sec:data-analysis} gives an overview of the dataset, Section~\ref{sec:models-methods} proposes some approaches to the problem and explains the design of the cnn we used, Section~\ref{sec:results} shows and demonstrate the results reached with the explained model, Section~\ref{sec:furture-work} proposes some next steps that could be undertook to further improve the model.
 
 \begin{figure}
 	\centering
@@ -113,6 +113,8 @@ Therefore, we started searching and studying solutions based on CNNs. We found t
 	\vspace{-3mm}
 	\label{fig:dead-filters}
 \end{figure}
+
+\subsection{Our CNN model}
 Given the differences in size between train images and test images, we decided to build a CNN which could take as input an image of any size and output the estimated probability of being a road for each patch of that image. To achieve such a CNN we did not used any dense layer, since it requires an input of fixed size, and designed it such that it reduced each side of the input image by a factor equal to the width of the patch we wanted to predict so to obtain an output mask of size $H/n*W/n$ where n is the width of the patch. We tried both predicting $8*8$ patch-wise and $16*16$ patch-wise and observed better results when predicting $8*8$ patch-wise. The structure of our CNN is depicted in Figure \ref{fig:cnn-model}. Since we experienced problems of GPU memory filling, we could only adopt convolutional layers of higher number of filters after reducing the size of the input image, i.e. the first layers have bigger inputs and less filters while the last layers have smaller inputs but can have more filters \footnote{The output of a convolutional layer, when strides is $1*1$ and padding is used, is $H * W * \#filters$ where $H*W$ is the size of the input.}. 
 
 The most common activation function used after convolutional layer is the ReLU. However, since we have experienced the problem of dead filters \footnote{Dead filters are filters that always output zero for any input. This may happen when, during training, the weights are updated in such a way that the neuron will never activate on any input again which lead to a gradient of zero and no update of the weights.}, we have switched to the Leaky ReLU, i.e. a variant of the ReLU which has a small positive gradient for negative inputs: 
@@ -125,18 +127,29 @@ We used $k$ max pooling layers with a pool size of $2*2$ where $2\textsuperscrip
 Moreover, after each max pooling layer we added a dropout layer, i.e. a regularization technique used to prevent overfitting by randomly setting to 0 a fraction of the input during the training phase. We have set the dropping rate for all the dropout layers to $0.25$.
 
 \subsection{Data augmentation}
-Increasing the training set In order to reduce overfitting and also
+CNNs need a big training set in order to recognize the patterns proper of the roads otherwise it could overfit and just memorize the training images. Increasing the training set is a must and could greatly increase the performance of the model while reducing overfitting. Our model builds the batches of images on-the-fly applying rotation and/or mirroring to the original image. While each image of the batch is mirrored with a probability of $0.5$ we decided not to rotate each image by a random degree since most of the images, both in the test set and train set, have vertical and horizontal roads and we wanted our model to master the recognition of those roads. Rotation is done in the following way: an image of the batch is rotated by any degree with a probability of $0.2$ while is rotated by $90^\circ*k$ where $k=1,2,3,4$ with a probability of $0.8$. Figure \ref{fig:data-augmentation} shows an examples of data augmentation applied on an image. This data augmentation proved to be effective and our model learnt not only to recognize horizontal and vertical roads but also diagonal roads.
+\begin{figure}[tbp]
+	\centering
+	\includegraphics[width=0.8\columnwidth]{img/data_augmentation.png}
+	\caption{At the top-left the original image, the other are example of augmentation of that image. After rotating the image, the points outside the boundaries are filled by reflecting the image so to always obtain an image of the same size ($400*400$).}
+	\vspace{-3mm}
+	\label{fig:data-augmentation}
+\end{figure}
 
-\subsection{Cross validation}
+\subsection{Post-processing}
+Once the model have been trained, its the predictions can be further improved in order to increase the F1 score. However, even if roads have some intuitive properties, e.g. starting from a road you can always reach the border the image, it is not trivial to improve a predicted mask of roads such that those properties are fulfilled. Therefore, we opted for two easier solutions that proved to increase the F1 score by a couple of percentage points. 
+\begin{itemize}
+	\item We compute on the on the train images and its predictions the optimal threshold so that each patch whose probability is beyond that threshold is labeled as road. This step is simply done with a grid search and retrieving the threshold which corresponds to the maximum F1 score. This estimated optimal threshold will be used on the predictions of the test set to label each patch.
+	\item To obtain the predictions of a test image, we mirror it and/or rotate it by $90^\circ*k$ where $k=1,2,3,4$ so to obtain 8 different predictions. Those predictions are then averaged to obtain the final prediction.
+\end{itemize}
 
 \section{Results}
-\label{sec:Results}
+\label{sec:results}
+The CNN was trained for XXX epochs, each consisting of XXX batches of 4 images, on a NVIDIA GeForce GTX graphics card with 2 GB of VRAM. In order to compare different CNNs models we used 4-fold cross validation. Figure XX shows the estimated F1 scores of our main CNN models compared to the aforementioned three baselines and agrees with the F1 score obtained on Kaggle (XXX\%). Even without any preprocessing other than data augmentation our CNN outperformed the baselines and confirmed their superiority in solving this kind of tasks.
 
-\section{Discussion}
-\label{sec:Discussion}
-
-\section{Summary}
-\label{sec:Summary}
+\section{Conclusion}
+\label{sec:conclusion}
+The model we designed proved to be versatile and effective in predicting correctly. However, our model failed in recognizing narrow roads, especially when they were covered by shadows, as show in Figure XX. This problem is due to the fact that those types of roads are almost inexistent in the training set while present in many images of the test set. Moreover, the train and test datasets were mainly restricted to cities. To obtain a model that would efficiently work with a wider range of input images, e.g. images with snow, contry images or on different metheorical conditions, we would require a bigger and diverse training set. 
 
 %~\cite{schwab00,wavelab,gentleman05}
 %\begin{figure}[tbp]
