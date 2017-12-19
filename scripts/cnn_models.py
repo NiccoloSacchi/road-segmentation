@@ -43,8 +43,9 @@ class CnnModel:
                 the model, the current weights and its history will be saved in this path.
             """
         # here the list of the functions that create a model
-        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model, model_leakyrelu_maxpooling, model_relu_maxpooling, model_16x16leakyrelu_maxpooling,model_4x4leakyrelu_maxpooling,model_leakyrelu_maxpooling_extra_layer,secondary_model] 
-        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters", "model_leakyrelu_maxpooling", "model_relu_maxpooling", "model_16x16leakyrelu_maxpooling","model_4x4leakyrelu_maxpooling","model_leakyrelu_maxpooling_extra_layer","secondary_model"]
+        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model, model_leakyrelu_maxpooling, model_relu_maxpooling, model_16x16leakyrelu_maxpooling,model_4x4leakyrelu_maxpooling,model_leakyrelu_maxpooling_extra_layer,model_final] 
+        
+        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters", "model_leakyrelu_maxpooling", "model_relu_maxpooling", "model_16x16leakyrelu_maxpooling","model_4x4leakyrelu_maxpooling","model_leakyrelu_maxpooling_extra_layer","model_final"]
         self.model_idx = model_n
         self.model = models[model_n]() 
         self.history = {
@@ -59,39 +60,16 @@ class CnnModel:
         if not os.path.exists(model_path):
             os.makedirs(model_path)
         self.model_path=model_path
-
-    def predict_train_set(self,x,batch_size):
-        
-        iterations = int(x.shape[0]/batch_size)
-        y = np.empty([0,400,400,2])
-        for batch_idx in range(iterations):
-            start = batch_idx*batch_size
-            end = start+batch_size
-            images = x[start:end]            
-            predictions = self.predict(images)
-            y = np.concatenate((y,predictions))
-        
-        return y
         
         
     def predict_and_export(self):
+        """makes predictions on the unknown images and exports a .csv file for Kaggle"""
         threshold = 0.5
         filename_list = []
         for batch_idx in range(10):
             images = load_images_to_predict(batch_idx*5,batch_idx*5+5)
             predictions = self.predict(images)
-            
-#             img_matrix = np.zeros([predictions.shape[0],predictions.shape[1],predictions.shape[2]])
-            
-#             print(img_matrix.shape)
-            for i in range(predictions.shape[0]):
-#                 for row in range(predictions.shape[1]):
-#                     for col in range (predictions.shape[2]):
-#                         if  predictions[i][row][col][1]>threshold :
-#                             img_matrix[i][row][col] = 1.0
-#                         else:
-#                             img_matrix[i][row][col] = 0.0
-               
+            for i in range(predictions.shape[0]):       
                 img_idx = batch_idx*5+i+1
                 filename = "../dataset/test_set_images/test_"+str(img_idx)+"/gt"+str(img_idx)
                 ext = ".jpg"
@@ -101,8 +79,9 @@ class CnnModel:
         
         masks_to_submission("submission.csv",filename_list)
         
-    def predict_augmented_and_export(self):
-        threshold = 0.55
+    def predict_augmented_and_export(self,thresh = 0.5):
+        """makes multiple predictions on the unknown images and their rotated couterparts, averages the predictions over the rotations and exports a .csv file for Kaggle"""
+        threshold = thresh
         print("Threshold:", threshold)
         filename_list = []
         for batch_idx in range(10):
@@ -137,12 +116,12 @@ class CnnModel:
         prediction_shape = self.predict(imgs[:1])[0].shape # (I just get shape of the prediction)
         predictions = np.zeros(np.append(num_images, prediction_shape)) # here we sum all the predictions 
         for i in range(num_images):
-            print("Predicting image", i) if verbose else None
+            #print("Predicting image", i) if verbose else None
             for flip in [False, True]:
-                print("\tFlipping image:", flip) if verbose else None
+                #print("\tFlipping image:", flip) if verbose else None
                 img_flipped = np.flip(imgs[i], axis=1) if flip else imgs[i]
                 for degrees in range(0, 360, rot_interval):
-                    print("\t\tRotate by", degrees, "degrees and predict") if verbose else None
+                    #print("\t\tRotate by", degrees, "degrees and predict") if verbose else None
                     img_aug = rotate_image(img_flipped, degrees)
                     # predict, the image 
                     curr_pred = self.predict(np.array([img_aug]))[0]
@@ -1162,18 +1141,61 @@ def model_leakyrelu_maxpooling_extra_layer():
 
     return model
 
-def secondary_model():
+
+def model_final():
+    # with relu from keras import backend as K
     nclasses = 2
     model = Sequential()
     pool_size = (2,2)
-
+    
+    # layer 1
     model.add(
-        Conv2D(48, (7, 7),
+        Conv2D(48, (11, 11), 
                padding="same", 
-               input_shape=(None, None, 2)))
+               input_shape=(None, None, 3)))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.25)) 
+
+    # layer 2
+    model.add(
+        Conv2D(64, (7, 7),
+               padding="same"
+              ))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.25))
+
+    # later 3
+    model.add(
+        Conv2D(128, (5, 5), 
+               padding="same")) 
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(MaxPooling2D(padding="same",pool_size=pool_size))
+    model.add(Dropout(0.25)) 
+
+    # layer 4
+    model.add(
+        Conv2D(256, (5, 5), 
+               padding="same")) 
     model.add(LeakyReLU(alpha=0.1))
     model.add(Dropout(0.25)) 
+
+    # layer 5
+    model.add(
+        Conv2D(2, (5, 5), 
+               padding="same"))
+    model.add(LeakyReLU(alpha=0.1))
+
+    model.add(Activation('softmax'))
     
+    model.add(
+    Conv2D(48, (7, 7),
+           padding="same", 
+           input_shape=(None, None, 2)))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.25)) 
+
     model.add(
         Conv2D(64, (5, 5),
                padding="same"
@@ -1191,7 +1213,9 @@ def secondary_model():
         Conv2D(2, (5, 5), 
                padding="same"))
     model.add(LeakyReLU(alpha=0.1))
-
+    
     model.add(Activation('softmax'))
     
     return model
+
+
