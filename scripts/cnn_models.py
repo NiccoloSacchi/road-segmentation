@@ -79,9 +79,9 @@ class CnnModel:
         
         masks_to_submission("submission.csv",filename_list)
         
-    def predict_augmented_and_export(self):
+    def predict_augmented_and_export(self,thresh):
         """makes multiple predictions on the unknown images and their rotated couterparts, averages the predictions over the rotations and exports a .csv file for Kaggle"""
-        threshold = 0.55
+        threshold = thresh
         print("Threshold:", threshold)
         filename_list = []
         for batch_idx in range(10):
@@ -116,12 +116,12 @@ class CnnModel:
         prediction_shape = self.predict(imgs[:1])[0].shape # (I just get shape of the prediction)
         predictions = np.zeros(np.append(num_images, prediction_shape)) # here we sum all the predictions 
         for i in range(num_images):
-            print("Predicting image", i) if verbose else None
+            #print("Predicting image", i) if verbose else None
             for flip in [False, True]:
-                print("\tFlipping image:", flip) if verbose else None
+                #print("\tFlipping image:", flip) if verbose else None
                 img_flipped = np.flip(imgs[i], axis=1) if flip else imgs[i]
                 for degrees in range(0, 360, rot_interval):
-                    print("\t\tRotate by", degrees, "degrees and predict") if verbose else None
+                    #print("\t\tRotate by", degrees, "degrees and predict") if verbose else None
                     img_aug = rotate_image(img_flipped, degrees)
                     # predict, the image 
                     curr_pred = self.predict(np.array([img_aug]))[0]
