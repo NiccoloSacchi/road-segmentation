@@ -1108,7 +1108,7 @@ def model_leakyrelu_maxpooling_extra_layer():
 
     # later 3
     model.add(
-        Conv2D(128, (5, 5), 
+        Conv2D(64, (5, 5), 
                padding="same")) 
     model.add(LeakyReLU(alpha=0.1))
     model.add(MaxPooling2D(padding="same",pool_size=pool_size))
@@ -1123,14 +1123,14 @@ def model_leakyrelu_maxpooling_extra_layer():
 
     # layer 5
     model.add(
-        Conv2D(128, (5, 5), 
+        Conv2D(64, (5, 5), 
                padding="same")) 
     model.add(LeakyReLU(alpha=0.1))
     model.add(Dropout(0.25)) 
   
    # layer 5
     model.add(
-        Conv2D(128, (5, 5), 
+        Conv2D(64, (5, 5), 
                padding="same")) 
     model.add(LeakyReLU(alpha=0.1))
     model.add(Dropout(0.25)) 
