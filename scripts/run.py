@@ -23,26 +23,25 @@ from evaluate import *
 import scipy as scipy
 from mask_to_submission import *
 
-#LOADING THE DATA
+#LOAD THE DATA
 n = 100
 imgs, gt_imgs = load_images(n)
 
-#SPLITING IT BETWEEN TEST AND TRAIN
+#SPLIT IT BETWEEN TEST AND TRAIN
 test_ratio = 0.04
 train, test = split_train_test(imgs, gt_imgs, test_ratio=test_ratio, seed=1)
 
-#LOADING A NEW MODEL 
-folder_name = "model_"+str('{0:%Y-%m-%d_%H%M%S}'.format(datetime.now()))
-model_path = "..\\models\\"+folder_name
-model = CnnModel(model_n=7, model_path=model_path)
+#LOAD OUR BEST MODEL AND ITS BEST WEIGHTS
+folder_name = "model_2017-12-17_015606"
+model_path = "..\models\\"+folder_name
+model = CnnModel(model_n = 7,model_path=model_path)
+model.load() 
+model.load_weights("2017-12-19_152321_best-weightsmodel_leakyrelu_maxpooling.hdf5")
 
-#TRAINING FOR 1000 EPOCHS
-num_epochs=10
-batch_size=4
-_ = model.train(train, test=test, num_epochs=num_epochs, batch_size=batch_size, monitor='loss') 
+#GRID-SEARCH THE THRESHOLD GIVING THE BEST RESULTS
+pred_rot4 = model.predict_augmented(set_.X, n_rotations=4)
+true = predictions_to_class(np.array([gt_img_to_Y(y, predict_patch_width=8) for y in set_.Y])).flatten()
+_,threshold = grid_search_treshold(pred_rot4[:, :, :, 1].flatten(), true)
 
-#SAVING THE MODEL
-model.save()
-
-#PREDICTING THE UNKNOWN SET AND CREATING THE SUBMISSION FILE
-model.predict_augmented_and_export()
+#PREDICT THE UNKNOWN SET AND CREATING THE SUBMISSION FILE
+model.predict_augmented_and_export(threshold)

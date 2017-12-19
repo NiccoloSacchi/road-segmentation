@@ -79,7 +79,7 @@ class CnnModel:
         
         masks_to_submission("submission.csv",filename_list)
         
-    def predict_augmented_and_export(self,thresh):
+    def predict_augmented_and_export(self,thresh = 0.5):
         """makes multiple predictions on the unknown images and their rotated couterparts, averages the predictions over the rotations and exports a .csv file for Kaggle"""
         threshold = thresh
         print("Threshold:", threshold)
