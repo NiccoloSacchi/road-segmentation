@@ -43,8 +43,8 @@ class CnnModel:
                 the model, the current weights and its history will be saved in this path.
             """
         # here the list of the functions that create a model
-        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model, model_leakyrelu_maxpooling, model_relu_maxpooling, model_16x16leakyrelu_maxpooling,model_4x4leakyrelu_maxpooling,model_leakyrelu_maxpooling_extra_layer] 
-        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters", "model_leakyrelu_maxpooling", "model_relu_maxpooling", "model_16x16leakyrelu_maxpooling","model_4x4leakyrelu_maxpooling","model_leakyrelu_maxpooling_extra_layer"]
+        models = [model1, model2,additional_conv_layer_model,max_pooling_model,leaky_relu_model,decreased_dropout_model,many_filters_model, model_leakyrelu_maxpooling, model_relu_maxpooling, model_16x16leakyrelu_maxpooling,model_4x4leakyrelu_maxpooling,model_leakyrelu_maxpooling_extra_layer,secondary_model] 
+        self.model_names = ["model1","model2","additional_conv_layer","max_pooling","leaky_relu_model","decreased_dropout","many_filters", "model_leakyrelu_maxpooling", "model_relu_maxpooling", "model_16x16leakyrelu_maxpooling","model_4x4leakyrelu_maxpooling","model_leakyrelu_maxpooling_extra_layer","secondary_model"]
         self.model_idx = model_n
         self.model = models[model_n]() 
         self.history = {
@@ -60,6 +60,20 @@ class CnnModel:
             os.makedirs(model_path)
         self.model_path=model_path
 
+    def predict_train_set(self,x,batch_size):
+        
+        iterations = int(x.shape[0]/batch_size)
+        y = np.empty([0,400,400,2])
+        for batch_idx in range(iterations):
+            start = batch_idx*batch_size
+            end = start+batch_size
+            images = x[start:end]            
+            predictions = self.predict(images)
+            y = np.concatenate((y,predictions))
+        
+        return y
+        
+        
     def predict_and_export(self):
         threshold = 0.5
         filename_list = []
@@ -104,6 +118,9 @@ class CnnModel:
         
         masks_to_submission("submission.csv",filename_list)
     
+
+    
+                
     def predict(self, x, batch_size=None, verbose=0, steps=None):
         return self.model.predict(x)#,batch_size = batch_size, verbose = verbose, steps = steps)
         
@@ -1143,4 +1160,38 @@ def model_leakyrelu_maxpooling_extra_layer():
 
     model.add(Activation('softmax'))
 
+    return model
+
+def secondary_model():
+    nclasses = 2
+    model = Sequential()
+    pool_size = (2,2)
+
+    model.add(
+        Conv2D(48, (7, 7),
+               padding="same", 
+               input_shape=(None, None, 2)))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.25)) 
+    
+    model.add(
+        Conv2D(64, (5, 5),
+               padding="same"
+              ))
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.25))
+
+    model.add(
+        Conv2D(64, (5, 5), 
+               padding="same")) 
+    model.add(LeakyReLU(alpha=0.1))
+    model.add(Dropout(0.25)) 
+
+    model.add(
+        Conv2D(2, (5, 5), 
+               padding="same"))
+    model.add(LeakyReLU(alpha=0.1))
+
+    model.add(Activation('softmax'))
+    
     return model
