@@ -36,12 +36,13 @@ folder_name = "model_2017-12-17_015606"
 model_path = "..\models\\"+folder_name
 model = CnnModel(model_n = 7,model_path=model_path)
 model.load() 
-model.load_weights("2017-12-19_152321_best-weightsmodel_leakyrelu_maxpooling.hdf5")
+model.load_weights("2017-12-19_165405_best-weightsmodel_leakyrelu_maxpooling.hdf5")
 
 #GRID-SEARCH THE THRESHOLD GIVING THE BEST RESULTS
-pred_rot4 = model.predict_augmented(set_.X, n_rotations=4)
-true = predictions_to_class(np.array([gt_img_to_Y(y, predict_patch_width=8) for y in set_.Y])).flatten()
+pred_rot4 = model.predict_augmented(train.X, n_rotations=4)
+true = predictions_to_class(np.array([gt_img_to_Y(y, predict_patch_width=8) for y in train.Y])).flatten()
 _,threshold = grid_search_treshold(pred_rot4[:, :, :, 1].flatten(), true)
+print("Threshold : "+str(threshold))
 
 #PREDICT THE UNKNOWN SET AND CREATING THE SUBMISSION FILE
 model.predict_augmented_and_export(threshold)
