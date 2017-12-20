@@ -1,13 +1,13 @@
-# Road Segmentation with Convolutional Neural Networks
+﻿# Road Segmentation with Convolutional Neural Networks
 ##### Théo Deprelle, Valentin Nigolian, Niccolo Sacchi
 This project is part of the course "Pattern Classification and Machine Learning" taught at EPFL in 2017. It presents a technique for segmenting satellite images by using convolutional neural networks (CNNs). The CNN we used implements classify each pixel either as road or background, but can be adapted to detect any kind of feature depending on the provided ground-truth.
 
-Our team obtained an F1 score of 93.5% on the test set. The model and the techniques used are explained in `groupRoadSegmentationFault-submission.pdf`.
-
-This repository includes both a script to train the model from scratch and a pre-trained model that can be used direcly to generate predictions. The original training and test sets can be downloaded from the Release section.
+Our team obtained an F1 score of 93.XXX% on the test set. The model and the techniques used are explained in `groupRoadSegmentationFault-submission.pdf`.
 
 ### Libraries
 In order to correctly to run the scripts the following libraries must be installed:
+
+VVV CHANGE VVV
 
 - Keras 2.1.1
 - Tensorlow 1.4.0
@@ -17,7 +17,9 @@ Keras is a  high-level neural networks API that uses TensorFlow as backend.
 
 ### Hardware
 The model has been trained on a GPU acceleration, with the following setup:
+
 VVV CHANGE VVV
+
 - Windows 8.1 x64
 - Intel Core i5-4460 @3.2 GHz
 - NVIDIA GeForce GTX 960 (with 2 GB of RAM)
