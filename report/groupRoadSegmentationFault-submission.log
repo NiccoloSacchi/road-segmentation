@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.6.20)  19 DEC 2017 20:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.6.20)  19 DEC 2017 22:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -579,11 +579,11 @@ Package pdftex.def Info: img/wrongannots.png used on input line 211.
 
 
  <./img/outlayers.png> <./img/wrongannots.png>]
-<img/unet.png, id=143, 923.45pt x 593.21625pt>
+<img/unet.png, id=143, 820.06375pt x 551.05875pt>
 File: img/unet.png Graphic file (type png)
  <use img/unet.png>
 Package pdftex.def Info: img/unet.png used on input line 223.
-(pdftex.def)             Requested size: 243.91125pt x 156.68561pt.
+(pdftex.def)             Requested size: 231.71494pt x 155.70801pt.
 
 Underfull \hbox (badness 1616) in paragraph at lines 228--229
 []\OT1/ptm/m/n/10 The sec-ond ex-pe-ri-ence we have tried is us-ing the
@@ -630,18 +630,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 263--264
 
  []
 
-<img/diagonals.png, id=145, 212.795pt x 212.795pt>
+<img/diagonals.png, id=145, 610.28pt x 610.28pt>
 File: img/diagonals.png Graphic file (type png)
  <use img/diagonals.png>
 Package pdftex.def Info: img/diagonals.png used on input line 269.
-(pdftex.def)             Requested size: 85.37042pt x 85.36975pt.
+(pdftex.def)             Requested size: 85.37042pt x 85.36412pt.
 
-<img/diagonals_corrected.png, id=146, 311.1625pt x 311.1625pt>
+<img/diagonals_corrected.png, id=146, 610.28pt x 610.28pt>
 File: img/diagonals_corrected.png Graphic file (type png)
 
 <use img/diagonals_corrected.png>
 Package pdftex.def Info: img/diagonals_corrected.png used on input line 270.
-(pdftex.def)             Requested size: 85.37042pt x 85.36816pt.
+(pdftex.def)             Requested size: 85.37042pt x 85.36412pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 276--277
 
@@ -655,26 +655,26 @@ Package pdftex.def Info: img/rot.png used on input line 282.
  [5
 
  <./img/unet.png> <./img/dataaug.png> <./img/diagonals.png> <./img/diagonals_co
-rrected.png> <./img/rot.png>] <img/loss_unet.png, id=161, 557.08125pt x 484.811
+rrected.png> <./img/rot.png>] <img/loss_unet.png, id=164, 557.08125pt x 484.811
 25pt>
 File: img/loss_unet.png Graphic file (type png)
 
 <use img/loss_unet.png>
 Package pdftex.def Info: img/loss_unet.png used on input line 299.
 (pdftex.def)             Requested size: 195.12975pt x 169.81223pt.
- <img/pr_explain1.png, id=162, 292.09125pt x 381.425pt>
+ <img/pr_explain1.png, id=165, 292.09125pt x 381.425pt>
 File: img/pr_explain1.png Graphic file (type png)
 
 <use img/pr_explain1.png>
 Package pdftex.def Info: img/pr_explain1.png used on input line 307.
 (pdftex.def)             Requested size: 60.97781pt x 79.62436pt.
- <img/pr_explain2.png, id=163, 287.0725pt x 176.66pt>
+ <img/pr_explain2.png, id=166, 287.0725pt x 176.66pt>
 File: img/pr_explain2.png Graphic file (type png)
 
 <use img/pr_explain2.png>
 Package pdftex.def Info: img/pr_explain2.png used on input line 308.
 (pdftex.def)             Requested size: 146.34824pt x 90.06305pt.
- <img/pr_curve.png, id=164, 614.295pt x 606.265pt>
+ <img/pr_curve.png, id=167, 614.295pt x 606.265pt>
 File: img/pr_curve.png Graphic file (type png)
 
 <use img/pr_curve.png>
@@ -744,10 +744,10 @@ ist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/
 type1/urw/times/utmbi8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw
 /times/utmr8a.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/urw/times/utm
 ri8a.pfb>
-Output written on groupRoadSegmentationFault-submission.pdf (6 pages, 5736630 b
+Output written on groupRoadSegmentationFault-submission.pdf (6 pages, 7121449 b
 ytes).
 PDF statistics:
- 234 PDF objects out of 1000 (max. 8388607)
+ 237 PDF objects out of 1000 (max. 8388607)
  182 compressed objects within 2 object streams
  44 named destinations out of 1000 (max. 500000)
  227 words of extra memory for PDF output out of 10000 (max. 10000000)

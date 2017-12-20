@@ -220,7 +220,7 @@ The second inconsistency is the labeling. In the following example you can see t
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\columnwidth]{img/unet.png}
+  \includegraphics[width=0.95\columnwidth]{img/unet.png}
   \caption{UNet architecture}
   \label{fig:unet}
 \end{figure}
@@ -312,7 +312,7 @@ The sides of the rotated image needed to be treated carefully. Before backpropag
 
 	To compare our result we are using the Precision Recall method (PR). It's focusing on the relevance of the prediction and the labels of a test set. To compute the PR values we split the initial dataset into a training set and a test set where we know the ground thruths.
 
-	Then after the training we can compare our predictions with the ground thruth of the test set. We gradually increase the threshold that set the limit of the probability of the background and the road segment's pixels to compute different PR values in order to plot the following graph.
+	Then after the training we can compare our predictions with the ground thruth of the test set. We gradually increase the threshold that set the limit of the probability of the background and the road segment's pixels to compute different PR values on all the test set in order to plot the following graph.
 
 	\begin{figure}[h]
 		\centering
