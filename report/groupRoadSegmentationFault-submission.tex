@@ -152,9 +152,9 @@ Once the model have been trained, the predictions can be further improved in ord
 %(Equation~(\ref{eq:linear})).
 
 \subsection{U-Net architecture}
-The second model we have tried is based on the U-Net architecture. This network was made to be used for medical image segmentation. Since our problem is close to what this network was made for, UNet was an ideal candidate.
+The second model we have tried is based on the U-Net architecture ~\cite{unet}. This network was made to be used for medical image segmentation. Since our problem is close to what this network was made for, UNet was an ideal candidate.
 
-U-Net network architecture is illustrated in \ref{fig:unet}. It consists of a down-sampling path (left side) and an up-sampling path (right side). Both share the architecture of a traditional CNN and consist of the repeated application of two 3x3 convolutions each followed by a Rectified Linear Unit (ReLU). However, while the down-sampling path contains 2x2 max pooling operations with stride 2, that reduce the dimension of the input, the up-sampling path up-convolutional layer \todo{is this sentence correct?} that increase the size of the input back to the size of the input image. Moreover, we are using four skip connections that performs a concatenation with the input of the maxpooling and the output of the up-convolution.
+U-Net network architecture is illustrated in \ref{fig:unet}. It consists of a down-sampling path (left side) and an up-sampling path (right side). Both share the architecture of a traditional CNN and consist of the repeated application of two 3x3 convolutions each followed by a Rectified Linear Unit (ReLU). However, while the down-sampling path contains 2x2 max pooling operations with stride 2, that reduce the dimension of the input, the up-sampling path up-convolutional layer that increase the size of the output back to the size of the input image. Moreover, we are using four skip connections that performs a concatenation with the input of the maxpooling and the output of the up-convolution.
 
 \begin{figure}[h]
   \centering
@@ -201,7 +201,7 @@ We trained the network  batches of 4 images. Each image of the batch is a random
 \section{Results}
 \label{sec:results}
 \subsection{Traditional CNN}
-	The traditional CNN was trained for XXX epochs, each consisting of XXX batches of 4 images, on a NVIDIA GeForce GTX graphics card with 2 GB of VRAM. 
+	The traditional CNN was trained for XXX epochs, each consisting of XXX batches of 4 images, on a NVIDIA GeForce GTX graphics card with 2 GB of VRAM.
 	\todo{change this, we can say we don't use the cross validation but precision-recall method => add to figure 9 the line representing the traditional cnn}
 	In order to compare different CNNs models we used 4-fold cross validation. Figure XX shows the estimated F1 scores of our main CNN models compared to the aforementioned three baselines and agrees with the F1 score obtained on Kaggle (XXX\%). Even without any preprocessing other than data augmentation our CNN outperformed the baselines and confirmed their superiority in solving this kind of tasks.
 \subsection{U-Net}
@@ -213,9 +213,7 @@ We trained the network  batches of 4 images. Each image of the batch is a random
 		\caption{Precision and recall evolution regarding our different methods}
 		\label{fig:pr}
 	\end{figure}
-	\todo{explain how those curves have to be interpreted}
-	With U-Net we can see the evolution with the different approaches. The random rotation and the enhancement of the highway images (we repeated the few highway images of the train set in order to improve the prediction of wide roads) are improving the performance of the model.
-
+	We can observe in this plot three important things. Since the yellow curve is bellow every others, we can say that Unet is perfroming better than the traditional approahch. The second observation is that the green curve is above the red one. Thanks to this we can conclude that adding more hightway images and getting ride off the sea sides images was a good thing. The third observation is about the blue curve. We can see that in some cases the blue curve is above the green one. In fact when we are not rotating the image the network learn better how to detect verticals and horizontals lines but for the others the result is worst. That explains why the blue curve goes above the yellow one between 0.6 and 0.8 but overall the yellow is the one with the better results.
 \section{Conclusion}
 \label{sec:conclusion}
 Both models proved to be versatile and effective in predicting correctly. However, our traditional CNN model failed in recognizing narrow roads, especially when they were covered by shadows, those types of roads are indeed almost inexistent in the training set while present in many images of the test set. Moreover, the train and test datasets were mainly restricted to cities. To obtain a model that would efficiently work with a wider range of input images, e.g. images with snow, country images or on different meteorological conditions, we would require a bigger and diverse training set.
