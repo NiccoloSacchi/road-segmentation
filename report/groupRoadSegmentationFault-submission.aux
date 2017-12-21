@@ -26,49 +26,45 @@
 \newlabel{sec:models-methods}{{III}{1}{Models and Methods}{section.3}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The left image is one of the very few sea sides images, the left image shows that roads may be covered by trees}}{2}{figure.1}}
 \newlabel{fig:corner-cases}{{1}{2}{The left image is one of the very few sea sides images, the left image shows that roads may be covered by trees}{figure.1}{}}
-\@writefile{tdo}{\contentsline {todo}{brief description of Théo model}{2}{section*.1}}
-\pgfsyspdfmark {pgfid1}{6475654}{13330661}
-\pgfsyspdfmark {pgfid2}{2225110}{13328368}
-\pgfsyspdfmark {pgfid3}{2864085}{13109478}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Traditional CNN model}{2}{subsection.3.1}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Distribution of the F1 scores computed on a 6-fold cross validation on the three considered baselines.}}{2}{figure.2}}
 \newlabel{fig:baselines}{{2}{2}{Distribution of the F1 scores computed on a 6-fold cross validation on the three considered baselines}{figure.2}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Scheme of the CNN model which obtained an F1 score of XXX }}{2}{figure.3}}
 \newlabel{fig:cnn-model}{{3}{2}{Scheme of the CNN model which obtained an F1 score of XXX}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Traditional CNN model}{2}{subsection.3.1}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Activations of the first convolutional layer: with ReLU on the left and with Leaky ReLU on the right. As can be noticed the number of dead filter decreased sensibly meaning the model was learning more reasonable features.}}{2}{figure.4}}
 \newlabel{fig:dead-filters}{{4}{2}{Activations of the first convolutional layer: with ReLU on the left and with Leaky ReLU on the right. As can be noticed the number of dead filter decreased sensibly meaning the model was learning more reasonable features}{figure.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces The left image is the original image. The right image is an example of augmentation of that image. After rotating the image, the points outside the boundaries are filled by reflecting the image so to always obtain an image of the same size ($400*400$).}}{3}{figure.5}}
 \newlabel{fig:data-augmentation}{{5}{3}{The left image is the original image. The right image is an example of augmentation of that image. After rotating the image, the points outside the boundaries are filled by reflecting the image so to always obtain an image of the same size ($400*400$)}{figure.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}U-Net architecture}{3}{subsection.3.2}}
-\@writefile{tdo}{\contentsline {todo}{is this sentence correct?}{3}{section*.4}}
-\pgfsyspdfmark {pgfid6}{20721254}{20044455}
-\pgfsyspdfmark {pgfid9}{38000557}{20042162}
-\pgfsyspdfmark {pgfid10}{38639532}{19823272}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces UNet architecture}}{3}{figure.6}}
-\newlabel{fig:unet}{{6}{3}{UNet architecture}{figure.6}{}}
+\@writefile{tdo}{\contentsline {todo}{is this sentence correct?}{3}{section*.3}}
+\pgfsyspdfmark {pgfid1}{20721254}{16501767}
+\pgfsyspdfmark {pgfid4}{38000557}{16499474}
+\pgfsyspdfmark {pgfid5}{38639532}{16280584}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces UNet architecture}}{4}{figure.6}}
+\newlabel{fig:unet}{{6}{4}{UNet architecture}{figure.6}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Training step diagram.}}{4}{figure.7}}
 \newlabel{fig:denoise-fourier}{{7}{4}{Training step diagram}{figure.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces On the left we can see that the diagonals are not detected well. On the contrary, on the right, when we are randomly rotating the images all the diagonals are well detected}}{4}{figure.8}}
-\newlabel{fig:diagonal}{{8}{4}{On the left we can see that the diagonals are not detected well. On the contrary, on the right, when we are randomly rotating the images all the diagonals are well detected}{figure.8}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {IV}Results}{4}{section.4}}
 \newlabel{sec:results}{{IV}{4}{Results}{section.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Traditional CNN}{4}{subsection.4.1}}
-\@writefile{tdo}{\contentsline {todo}{change this, we can say we don't use the cross validation but precision-recall method => add to figure 9 the line representing the traditional cnn}{4}{section*.6}}
-\pgfsyspdfmark {pgfid11}{34573931}{43215017}
-\pgfsyspdfmark {pgfid14}{38000557}{43212724}
-\pgfsyspdfmark {pgfid15}{38639532}{42993834}
+\@writefile{tdo}{\contentsline {todo}{change this, we can say we don't use the cross validation but precision-recall method => add to figure 9 the line representing the traditional cnn}{4}{section*.5}}
+\pgfsyspdfmark {pgfid6}{17404892}{7476018}
+\pgfsyspdfmark {pgfid7}{2225110}{7473725}
+\pgfsyspdfmark {pgfid8}{2864085}{7254835}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces On the left we can see that the diagonal roads are not detected well. On the right, after randomly rotating the images, the model is capable of correcly predict all diagonal roads.}}{4}{figure.8}}
+\newlabel{fig:diagonal}{{8}{4}{On the left we can see that the diagonal roads are not detected well. On the right, after randomly rotating the images, the model is capable of correcly predict all diagonal roads}{figure.8}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}U-Net}{4}{subsection.4.2}}
-\@writefile{tdo}{\contentsline {todo}{explain what those curves have to be interpreted}{4}{section*.7}}
-\pgfsyspdfmark {pgfid16}{29496203}{27593690}
+\@writefile{tdo}{\contentsline {todo}{explain how those curves have to be interpreted}{4}{section*.6}}
+\pgfsyspdfmark {pgfid11}{29496203}{24794710}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Precision and recall evolution regarding our different methods}}{4}{figure.9}}
 \newlabel{fig:pr}{{9}{4}{Precision and recall evolution regarding our different methods}{figure.9}{}}
-\pgfsyspdfmark {pgfid19}{38000557}{11949440}
-\pgfsyspdfmark {pgfid20}{38639532}{11730550}
-\@writefile{toc}{\contentsline {section}{\numberline {V}Conclusion}{4}{section.5}}
-\newlabel{sec:conclusion}{{V}{4}{Conclusion}{section.5}{}}
+\pgfsyspdfmark {pgfid14}{38000557}{8904709}
+\pgfsyspdfmark {pgfid15}{38639532}{8685819}
 \bibstyle{IEEEtran}
 \bibdata{groupRoadSegmentationFault-literature}
 \bibcite{HORMESE20161460}{1}
 \bibcite{lis2016}{2}
 \bibcite{dario2016}{3}
-\@writefile{toc}{\contentsline {section}{References}{5}{section*.8}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Conclusion}{5}{section.5}}
+\newlabel{sec:conclusion}{{V}{5}{Conclusion}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{References}{5}{section*.7}}

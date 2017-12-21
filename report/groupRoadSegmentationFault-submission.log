@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.2.15)  20 DEC 2017 12:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.2.15)  21 DEC 2017 21:44
 entering extended mode
 **./groupRoadSegmentationFault-submission.tex
 (groupRoadSegmentationFault-submission.tex
@@ -841,8 +841,8 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 37.
 
-Underfull \hbox (badness 3260) in paragraph at lines 44--46
-[]\OT1/ptm/m/n/10 We are given two sets of im-ages ac-quired from
+Underfull \hbox (badness 1748) in paragraph at lines 44--46
+[]\OT1/ptm/m/n/10 We were given two sets of im-ages ac-quired from
  []
 
 <img/corner_cases1.png, id=50, 536.75531pt x 264.99pt>
@@ -855,136 +855,6 @@ Package pdftex.def Info: img/corner_cases1.png used on input line 49.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
-ine 59.
-Missing character: There is no Ã in font ptmr7t!
-Missing character: There is no © in font ptmr7t!
-
-Overfull \hbox (7.07974pt too wide) in paragraph at lines 59--59
-[][][][]\OT1/ptm/m/n/10 brief 
- []
-
-
-Overfull \hbox (0.9699pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 de- 
- []
-
-
-Overfull \hbox (10.96964pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 scrip- 
- []
-
-
-Overfull \hbox (3.75978pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 tion 
- []
-
-
-Overfull \hbox (4.30998pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 Tho 
- []
-
-
-Overfull \hbox (13.19972pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 model  
- []
-
-Missing character: There is no Ã in font ptmr7t!
-Missing character: There is no © in font ptmr7t!
-
-Overfull \hbox (7.07974pt too wide) in paragraph at lines 59--59
-[][][][]\OT1/ptm/m/n/10 brief 
- []
-
-
-Overfull \hbox (0.9699pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 de- 
- []
-
-
-Overfull \hbox (10.96964pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 scrip- 
- []
-
-
-Overfull \hbox (3.75978pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 tion 
- []
-
-
-Overfull \hbox (4.30998pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 Tho 
- []
-
-
-Overfull \hbox (13.19972pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 model  
- []
-
-Missing character: There is no Ã in font ptmr7t!
-Missing character: There is no © in font ptmr7t!
-
-Overfull \hbox (7.07974pt too wide) in paragraph at lines 59--59
-[][][][]\OT1/ptm/m/n/10 brief 
- []
-
-
-Overfull \hbox (0.9699pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 de- 
- []
-
-
-Overfull \hbox (10.96964pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 scrip- 
- []
-
-
-Overfull \hbox (3.75978pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 tion 
- []
-
-
-Overfull \hbox (4.30998pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 Tho 
- []
-
-
-Overfull \hbox (13.19972pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 model  
- []
-
-Missing character: There is no Ã in font ptmr7t!
-Missing character: There is no © in font ptmr7t!
-
-Overfull \hbox (7.07974pt too wide) in paragraph at lines 59--59
-[][][][]\OT1/ptm/m/n/10 brief 
- []
-
-
-Overfull \hbox (0.9699pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 de- 
- []
-
-
-Overfull \hbox (10.96964pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 scrip- 
- []
-
-
-Overfull \hbox (3.75978pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 tion 
- []
-
-
-Overfull \hbox (4.30998pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 Tho 
- []
-
-
-Overfull \hbox (13.19972pt too wide) in paragraph at lines 59--59
-\OT1/ptm/m/n/10 model  
- []
-
 [1{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 
@@ -995,6 +865,9 @@ File: img/boxplots_naive.png Graphic file (type png)
 <use img/boxplots_naive.png>
 Package pdftex.def Info: img/boxplots_naive.png used on input line 63.
 (pdftex.def)             Requested size: 195.12975pt x 129.9694pt.
+
+Underfull \vbox (badness 2460) has occurred while \output is active []
+
 
 <img/cnnModel.png, id=70, 560.0925pt x 173.89969pt>
 File: img/cnnModel.png Graphic file (type png)
@@ -1010,12 +883,14 @@ Package pdftex.def Info: img/missing.png used on input line 79.
 
 [2 <./img/corner_cases1.png> <./img/boxplots_naive.png> <./img/cnnModel.png> <.
 /img/missing.png>]
-<img/data_augmentation2.png, id=95, 1070.49937pt x 448.67625pt>
+<img/data_augmentation2.png, id=90, 1070.49937pt x 448.67625pt>
 File: img/data_augmentation2.png Graphic file (type png)
 
 <use img/data_augmentation2.png>
 Package pdftex.def Info: img/data_augmentation2.png used on input line 100.
 (pdftex.def)             Requested size: 195.12975pt x 81.78517pt.
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
+ine 157.
 
 Overfull \hbox (2.64967pt too wide) in paragraph at lines 157--157
 \OT1/ptm/m/n/10 this 
@@ -1116,149 +991,37 @@ Overfull \hbox (7.62967pt too wide) in paragraph at lines 157--157
 \OT1/ptm/m/n/10 rect?  
  []
 
-<img/unet.png, id=97, 820.06375pt x 551.05875pt>
+<img/unet.png, id=92, 820.06375pt x 551.05875pt>
 File: img/unet.png Graphic file (type png)
  <use img/unet.png>
 Package pdftex.def Info: img/unet.png used on input line 161.
 (pdftex.def)             Requested size: 231.71494pt x 155.70801pt.
- [3 <./img/data_augmentation2.png> <./img/unet.png>]
-<img/dataaug.png, id=110, 848.16875pt x 472.76625pt>
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3 <./img/data_augmentation2.png>]
+<img/dataaug.png, id=113, 848.16875pt x 472.76625pt>
 File: img/dataaug.png Graphic file (type png)
  <use img/dataaug.png>
 Package pdftex.def Info: img/dataaug.png used on input line 184.
 (pdftex.def)             Requested size: 170.73712pt x 95.16475pt.
 
-<img/diagonals.png, id=112, 610.28pt x 610.28pt>
+<img/diagonals.png, id=115, 610.28pt x 610.28pt>
 File: img/diagonals.png Graphic file (type png)
  <use img/diagonals.png>
 Package pdftex.def Info: img/diagonals.png used on input line 194.
 (pdftex.def)             Requested size: 85.37042pt x 85.36412pt.
 
-<img/diagonals_corrected.png, id=113, 610.28pt x 610.28pt>
+<img/diagonals_corrected.png, id=116, 610.28pt x 610.28pt>
 File: img/diagonals_corrected.png Graphic file (type png)
 
 <use img/diagonals_corrected.png>
 Package pdftex.def Info: img/diagonals_corrected.png used on input line 195.
 (pdftex.def)             Requested size: 85.37042pt x 85.36412pt.
 
-Overfull \hbox (16.51982pt too wide) in paragraph at lines 205--205
-[][][][]\OT1/ptm/m/n/10 change 
- []
 
-
-Overfull \hbox (5.14967pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 this, 
- []
-
-
-Overfull \hbox (2.07988pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 can 
- []
-
-
-Overfull \hbox (1.52983pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 say 
- []
-
-
-Overfull \hbox (9.12991pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 don't 
- []
-
-
-Overfull \hbox (1.52983pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 use 
- []
-
-
-Overfull \hbox (8.74968pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 cross 
- []
-
-
-Overfull \hbox (3.49979pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 val- 
- []
-
-
-Overfull \hbox (0.9699pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 da- 
- []
-
-
-Overfull \hbox (3.75978pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 tion 
- []
-
-
-Overfull \hbox (0.77994pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 but 
- []
-
-
-Overfull \hbox (28.18947pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 precision- 
- []
-
-
-Overfull \hbox (10.40956pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 recall 
- []
-
-
-Overfull \hbox (18.19972pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 method 
- []
-
-
-Overfull \hbox (2.63994pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 add 
- []
-
-
-Overfull \hbox (2.08989pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 fig- 
- []
-
-
-Overfull \hbox (0.9699pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 ure 
- []
-
-
-Overfull \hbox (3.19972pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 line 
- []
-
-
-Overfull \hbox (4.29985pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 rep- 
- []
-
-
-Overfull \hbox (7.63968pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 sent- 
- []
-
-
-Overfull \hbox (0.97989pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 ing 
- []
-
-
-Overfull \hbox (2.07974pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 tra- 
- []
-
-
-Overfull \hbox (10.97961pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 tional 
- []
-
-
-Overfull \hbox (2.63994pt too wide) in paragraph at lines 205--205
-\OT1/ptm/m/n/10 cnn  
- []
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 Overfull \hbox (16.51982pt too wide) in paragraph at lines 205--205
@@ -1620,7 +1383,127 @@ Overfull \hbox (2.63994pt too wide) in paragraph at lines 205--205
 \OT1/ptm/m/n/10 cnn  
  []
 
-<img/pr_curve.png, id=115, 614.295pt x 606.265pt>
+
+Overfull \hbox (16.51982pt too wide) in paragraph at lines 205--205
+[][][][]\OT1/ptm/m/n/10 change 
+ []
+
+
+Overfull \hbox (5.14967pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 this, 
+ []
+
+
+Overfull \hbox (2.07988pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 can 
+ []
+
+
+Overfull \hbox (1.52983pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 say 
+ []
+
+
+Overfull \hbox (9.12991pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 don't 
+ []
+
+
+Overfull \hbox (1.52983pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 use 
+ []
+
+
+Overfull \hbox (8.74968pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 cross 
+ []
+
+
+Overfull \hbox (3.49979pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 val- 
+ []
+
+
+Overfull \hbox (0.9699pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 da- 
+ []
+
+
+Overfull \hbox (3.75978pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 tion 
+ []
+
+
+Overfull \hbox (0.77994pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 but 
+ []
+
+
+Overfull \hbox (28.18947pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 precision- 
+ []
+
+
+Overfull \hbox (10.40956pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 recall 
+ []
+
+
+Overfull \hbox (18.19972pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 method 
+ []
+
+
+Overfull \hbox (2.63994pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 add 
+ []
+
+
+Overfull \hbox (2.08989pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 fig- 
+ []
+
+
+Overfull \hbox (0.9699pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 ure 
+ []
+
+
+Overfull \hbox (3.19972pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 line 
+ []
+
+
+Overfull \hbox (4.29985pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 rep- 
+ []
+
+
+Overfull \hbox (7.63968pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 sent- 
+ []
+
+
+Overfull \hbox (0.97989pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 ing 
+ []
+
+
+Overfull \hbox (2.07974pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 tra- 
+ []
+
+
+Overfull \hbox (10.97961pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 tional 
+ []
+
+
+Overfull \hbox (2.63994pt too wide) in paragraph at lines 205--205
+\OT1/ptm/m/n/10 cnn  
+ []
+
+<img/pr_curve.png, id=118, 614.295pt x 606.265pt>
 File: img/pr_curve.png Graphic file (type png)
  <use img/pr_curve.png>
 Package pdftex.def Info: img/pr_curve.png used on input line 212.
@@ -1631,8 +1514,8 @@ Overfull \hbox (17.48976pt too wide) in paragraph at lines 216--216
  []
 
 
-Overfull \hbox (7.6398pt too wide) in paragraph at lines 216--216
-\OT1/ptm/m/n/10 what 
+Overfull \hbox (5.16997pt too wide) in paragraph at lines 216--216
+\OT1/ptm/m/n/10 how 
  []
 
 
@@ -1666,8 +1549,8 @@ Overfull \hbox (17.48976pt too wide) in paragraph at lines 216--216
  []
 
 
-Overfull \hbox (7.6398pt too wide) in paragraph at lines 216--216
-\OT1/ptm/m/n/10 what 
+Overfull \hbox (5.16997pt too wide) in paragraph at lines 216--216
+\OT1/ptm/m/n/10 how 
  []
 
 
@@ -1701,8 +1584,8 @@ Overfull \hbox (17.48976pt too wide) in paragraph at lines 216--216
  []
 
 
-Overfull \hbox (7.6398pt too wide) in paragraph at lines 216--216
-\OT1/ptm/m/n/10 what 
+Overfull \hbox (5.16997pt too wide) in paragraph at lines 216--216
+\OT1/ptm/m/n/10 how 
  []
 
 
@@ -1736,8 +1619,8 @@ Overfull \hbox (17.48976pt too wide) in paragraph at lines 216--216
  []
 
 
-Overfull \hbox (7.6398pt too wide) in paragraph at lines 216--216
-\OT1/ptm/m/n/10 what 
+Overfull \hbox (5.16997pt too wide) in paragraph at lines 216--216
+\OT1/ptm/m/n/10 how 
  []
 
 
@@ -1765,8 +1648,8 @@ Overfull \hbox (13.18973pt too wide) in paragraph at lines 216--216
 \OT1/ptm/m/n/10 preted  
  []
 
-[4 <./img/dataaug.png> <./img/diagonals.png> <./img/diagonals_corrected.png> <.
-/img/pr_curve.png>] (groupRoadSegmentationFault-submission.bbl
+[4 <./img/unet.png> <./img/dataaug.png> <./img/diagonals.png> <./img/diagonals_
+corrected.png> <./img/pr_curve.png>] (groupRoadSegmentationFault-submission.bbl
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <9> on input line 30.
 
@@ -1796,14 +1679,14 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 226.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 226.
 Package rerunfilecheck Info: File `groupRoadSegmentationFault-submission.out' h
 as not changed.
-(rerunfilecheck)             Checksum: 0FB03712C23067E9B74476518801EB7B;559.
+(rerunfilecheck)             Checksum: F1969B61947B62CFBF90BF04310ADF91;559.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 226.
  ) 
 Here is how much of TeX's memory you used:
- 24762 strings out of 493333
- 488036 string characters out of 3139194
- 718508 words of memory out of 3000000
- 27944 multiletter control sequences out of 15000+200000
+ 24753 strings out of 493333
+ 487840 string characters out of 3139194
+ 712649 words of memory out of 3000000
+ 27936 multiletter control sequences out of 15000+200000
  569917 words of font info for 89 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  62i,9n,76p,10412b,689s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1820,10 +1703,10 @@ TeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 2.9/f
 onts/type1/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/ti
 mes/utmbi8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><
 C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on groupRoadSegmentationFault-submission.pdf (5 pages, 3619109 b
+Output written on groupRoadSegmentationFault-submission.pdf (5 pages, 3619025 b
 ytes).
 PDF statistics:
- 196 PDF objects out of 1000 (max. 8388607)
- 39 named destinations out of 1000 (max. 500000)
+ 195 PDF objects out of 1000 (max. 8388607)
+ 38 named destinations out of 1000 (max. 500000)
  143 words of extra memory for PDF output out of 10000 (max. 10000000)
 
