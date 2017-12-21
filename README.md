@@ -4,10 +4,10 @@ This project is part of the course "Pattern Classification and Machine Learning"
 
 Our team obtained an F1 score of 93.38% on the test set. The model and the techniques used are explained in `groupRoadSegmentationFault-submission.pdf`.
 
-The folder with the program can be found at : 
+The model and the dataset that we used can be found at : 
 https://drive.switch.ch/index.php/s/it5ylw3afG8Lg2R
 
-Before anything you should change the paths of the images in the run.py and train.py files. All the images we have used are in the folder.
+Before anything you should change the paths of the images in the run.py and train.py files.
 
 
 ### Libraries
