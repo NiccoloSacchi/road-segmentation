@@ -1,20 +1,40 @@
-# Project Road Segmentation
+﻿# Road Segmentation with Convolutional Neural Networks
+##### Théo Deprelle, Valentin Nigolian, Niccolo Sacchi
+This project is part of the course "Pattern Classification and Machine Learning" taught at EPFL in 2017. It presents a technique for segmenting satellite images by using convolutional neural networks (CNNs). The CNN we used implements classify each pixel either as road or background, but can be adapted to detect any kind of feature depending on the provided ground-truth.
 
-For this choice of project task, we provide a set of satellite images acquired from GoogleMaps.
-We also provide ground-truth images where each pixel is labeled as road or background. 
+Our team obtained an F1 score of 93.XXX% on the test set. The model and the techniques used are explained in `groupRoadSegmentationFault-submission.pdf`.
 
-Your task is to train a classifier to segment roads in these images, i.e. assigns a label `road=1, background=0` to each pixel.
+### Libraries
+In order to correctly to run the scripts the following libraries must be installed:
 
-Submission system environment setup:
+VVV CHANGE VVV
 
-1. The dataset is available from the Kaggle page, as linked in the PDF project description
+- Keras 2.1.1
+- Tensorlow 1.4.0
+- others?
 
-2. Obtain the python notebook `segment_aerial_images.ipynb` from this github folder,
-to see example code on how to extract the images as well as corresponding labels of each pixel.
+Keras is a  high-level neural networks API that uses TensorFlow as backend.
 
-The notebook shows how to use `scikit learn` to generate features from each pixel, and finally train a linear classifier to predict whether each pixel is road or background. Or you can use your own code as well. Our example code here also provides helper functions to visualize the images, labels and predictions. In particular, the two functions `mask_to_submission.py` and `submission_to_mask.py` help you to convert from the submission format to a visualization, and vice versa.
+### Hardware
+The model has been trained on a GPU acceleration, with the following setup:
 
-3. As a more advanced approach, try `tf_aerial_images.py`, which demonstrates the use of a basic convolutional neural network in TensorFlow for the same prediction task.
+VVV CHANGE VVV
 
-Evaluation Metric:
- [https://www.kaggle.com/wiki/MeanFScore]
+- Windows 8.1 x64
+- Intel Core i5-4460 @3.2 GHz
+- NVIDIA GeForce GTX 960 (with 2 GB of RAM)
+- 16 GB of system memory
+- GPU Drivers: ForceWare 369.30
+- Keras 1.1.2 with Theano 0.8.2 backend + CuDNN 5.1
+- Theano flags: fastmath = True, optimizer = fast_run, floatX = float32
+
+### How to reproduce the predictions
+To generate the predictions, it is only necessary to run the script `run.py`. It won't train the model, instead it load the weights from `weights.h5`. Notice that this script expect to fin the test image in the folder `dataset/test_set_images`.
+
+### How to train
+To train the model from scratch run instead `train.py`. Depending on the available computational power and whether the model is being trained on the CPU or the GPU, the process may take some hours.
+
+### Description of the files
+vvv CHANGE vvv
+- `asd.py`: asd description
+- ...
