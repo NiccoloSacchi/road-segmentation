@@ -4,12 +4,10 @@ This project is part of the course "Pattern Classification and Machine Learning"
 
 Our team obtained an F1 score of 93.38% on the test set. The model and the techniques used are explained in `groupRoadSegmentationFault-submission.pdf`.
 
-You should change the path of the images in the run.py and train.py files. All the images we have used are zipped in the folder.
-
-The folden with the program can be found at : 
-
+The folder with the program can be found at : 
 https://drive.switch.ch/index.php/s/it5ylw3afG8Lg2R
 
+Before anything you should change the paths of the images in the run.py and train.py files. All the images we have used are in the folder.
 
 
 ### Libraries
@@ -26,10 +24,10 @@ The model has been trained on a GPU acceleration, with the following setup:
 - Cudnn 8.0
 
 ### How to reproduce the predictions
-To generate the predictions, it is only necessary to run the script `run.py`. It won't train the model, instead it load the weights from `weights.h5`. Notice that this script expect to fin the test image in the folder `dataset/test_set_images`.
+To generate the predictions, it is only necessary to run the script `run.py`. It won't train the model, instead it load the weights.
 
 ### How to train
-To train the model from scratch run instead `train.py`. With our configuration the training took 3 hours on the gpu.
+To train the model from scratch run instead `train.py`. With our configuration the training took 3 hours.
 
 ### Description of the files
 - `__init__.py`       : init the network
