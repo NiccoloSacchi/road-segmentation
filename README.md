@@ -1,30 +1,29 @@
-# Road Segmentation with Convolutional Neural Networks
+﻿# Road Segmentation with Convolutional Neural Networks
 ##### Théo Deprelle, Valentin Nigolian, Niccolo Sacchi
-This project is part of the course "Pattern Classification and Machine Learning" taught at EPFL in 2017. It presents a technique for segmenting satellite images by using convolutional neural networks (CNNs). The CNN we used implements classify each pixel either as road or background, but can be adapted to detect any kind of feature depending on the provided ground-truth.
+This project is part of the course "Pattern Classification and Machine Learning" taught at EPFL in 2017. It presents a technique for segmenting satellite images by using convolutional neural networks (CNNs).
 
-Our team obtained an F1 score of 93.38% on the test set. The model and the techniques used are explained in `groupRoadSegmentationFault-submission.pdf`.
+Our team obtained an F1 score of 93.85% on Kaggle. The model and the techniques used are explained in `groupRoadSegmentationFault-submission.pdf`.
 
-The folder with the program can be found at : 
-https://drive.switch.ch/index.php/s/it5ylw3afG8Lg2R
+Due to the size of the network, the folder with the model has been uploaded [here](https://drive.switch.ch/index.php/s/it5ylw3afG8Lg2R).
 
-Before anything you should change the paths of the images in the run.py and train.py files. All the images we have used are in the folder.
-
+Before anything you should change the paths of the images in the `run.py` and `train.py` files. All the images we have used are in the folder.
 
 ### Libraries
 In order to correctly to run the scripts the following libraries must be installed:
 
 - torch 0.2.0_4
-- numpy,scipy
+- numpy
+- scipy
+- python 3.6.4
+- Cudnn 8.0
 
 ### Hardware
 The model has been trained on a GPU acceleration, with the following setup:
 
 - NVIDIA Titan X (with 12 GB of RAM)
-- python 3.6.4
-- Cudnn 8.0
 
 ### How to reproduce the predictions
-To generate the predictions, it is only necessary to run the script `run.py`. It won't train the model, instead it load the weights.
+To generate the predictions, it is only necessary to run the script `run.py`. It won't train the model, instead it will just load the weights and produce a file with the predictions.
 
 ### How to train
 To train the model from scratch run instead `train.py`. With our configuration the training took 3 hours.
