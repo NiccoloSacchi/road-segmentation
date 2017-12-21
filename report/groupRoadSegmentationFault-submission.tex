@@ -7,8 +7,10 @@
 \usepackage{dblfloatfix}    % To enable figures at the bottom of page
 \usepackage{kantlipsum}     % for random text
 \usepackage{todonotes}
+\usepackage[margin=0.9in]{geometry}
 
 \begin{document}
+	
 \pretitle{\begin{center}\Huge\bfseries} % Article title formatting
 \posttitle{\end{center}} % Article title closing formatting
 \title{Road Segmentation challenge}
@@ -70,7 +72,7 @@ Therefore, we study solutions based on CNNs and we find two main approaches: (1)
 \begin{figure}[tbp]
 	\centering
 	\includegraphics[width=\columnwidth]{img/cnnModel.png}
-	\caption{Scheme of the CNN model which obtained an F1 score of XXX }
+	\caption{Scheme of the CNN model which obtained an F1 score of 0.933 }
 	\vspace{-3mm}
 	\label{fig:cnn-model}
 \end{figure}
@@ -178,14 +180,6 @@ The energy function is computed by a pixel-wise soft-max $S$ over the final feat
 Where $a_k(x)$ denotes the activation in feature channel $k$ at the pixel position $x$ of the image $\Omega$.
 
 \subsubsection*{Data augmentation}
-
-\begin{figure}[h]
- \centering
- \includegraphics[width=0.7\columnwidth]{img/dataaug.png}
- \caption{Training step diagram.}
- \vspace{-3mm}
- \label{fig:denoise-fourier}
-\end{figure}
 
 We trained the network  batches of 4 images. Each image of the batch is a randomly selected patch of size $384x384$ from the original image. Using this method our result were good but it appeared that diagonal roads were not detected correctly. This was because the majority of the images of the training set did not have diagonal lines. To rectify this problem we randomly rotate the image after each training step. This allows us to have a better diagonal roads detection since the train set now include roads with different orientations, as shown by Figure \ref{fig:diagonal}. However, rotating an image may leave some pixels outside the boundaries. We decided to label those pixels in the ground-truth with a different class, i.e. class 2 (ignore part). Those labels allowed us to ignore the respective pixel in the computation of the loss, which was properly modified, so that they have no impact on the training process.
 
