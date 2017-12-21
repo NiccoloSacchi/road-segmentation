@@ -4,9 +4,9 @@ This project is part of the course "Pattern Classification and Machine Learning"
 
 Our team obtained an F1 score of 93.85% on Kaggle. The model and the techniques used are explained in `groupRoadSegmentationFault-submission.pdf`.
 
-Due to the size of the network, the folder with the model has been uploaded [here](https://drive.switch.ch/index.php/s/it5ylw3afG8Lg2R).
+Due to the size of the network, both the model and the dataset have been uploaded [here](https://drive.switch.ch/index.php/s/it5ylw3afG8Lg2R).
 
-Before anything you should change the paths of the images in the `run.py` and `train.py` files. All the images we have used are in the folder.
+Before anything you should change the paths of the images in the `run.py` and `train.py` files.
 
 ### Libraries
 In order to correctly to run the scripts the following libraries must be installed:
