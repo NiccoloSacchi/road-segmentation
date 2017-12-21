@@ -202,12 +202,7 @@ We trained the network  batches of 4 images. Each image of the batch is a random
 \section{Results}
 \label{sec:results}
 
-\subsection{Traditional CNN}
-	The traditional CNN was trained for 1000 epochs, each consisting of 25 batches of 4 images, on a NVIDIA GeForce GTX graphics card with 2 GB of VRAM.
-	\todo{change this, we can say we don't use the cross validation but precision-recall method => add to figure 9 the line representing the traditional cnn}
-	In order to compare different CNNs models we used 4-fold cross validation. Figure XX shows the estimated F1 scores of our main CNN models compared to the aforementioned three baselines and agrees with the F1 score obtained on Kaggle (XXX\%). Even without any preprocessing other than data augmentation our CNN outperformed the baselines and confirmed their superiority in solving this kind of tasks.
-\subsection{U-Net}
-	After 10000 iteration with a learning rate $\lambda = 10^{-3}$ we have obtained a accuracy of 93.35\% on the test set where the labels are unknown.
+	The traditional CNN was trained for 1000 epochs, each consisting of 25 batches of 4 images, on a NVIDIA GeForce GTX graphics card with 2 GB of VRAM, obtaining an F1 score of 0.833. While the U-Net was trained for 10000 iteration with a learning rate $\lambda = 10^{-3}$ which lead to an F1 score of 0.9385 on the test set submitted on Kaggle.
 	To compare different techniques we used the Precision Recall method (PR) which focuses on the relevance of the prediction on the labels of a test set. To compute the PR values we split the training dataset into two subsets, one used for training and one used to compute the PR curve. The latter is computed by gradually increasing the threshold (used to establish, given its probability, if a pixel is a road) to compute different PR values. By doing so, we obtain the graph in Figure \ref{fig:pr}.
 
 	\begin{figure}[h]
