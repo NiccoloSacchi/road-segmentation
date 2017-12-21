@@ -76,7 +76,7 @@ Therefore, we study solutions based on CNNs and we find two main approaches: (1)
 \end{figure}
 \begin{figure}[tbp]
 	\centering
-	\includegraphics[width=0.8\columnwidth]{img/missing.png}
+	\includegraphics[width=0.8\columnwidth]{img/featuremaps.jpg}
 	\caption{Activations of the first convolutional layer: with ReLU on the left and with Leaky ReLU on the right. As can be noticed the number of dead filter decreased sensibly meaning the model was learning more reasonable features.}
 	\vspace{-3mm}
 	\label{fig:dead-filters}
@@ -179,14 +179,6 @@ Where $a_k(x)$ denotes the activation in feature channel $k$ at the pixel positi
 
 \subsubsection*{Data augmentation}
 
-\begin{figure}[h]
- \centering
- \includegraphics[width=0.7\columnwidth]{img/dataaug.png}
- \caption{Training step diagram.}
- \vspace{-3mm}
- \label{fig:denoise-fourier}
-\end{figure}
-
 We trained the network  batches of 4 images. Each image of the batch is a randomly selected patch of size $384*384$ from the original image. Using this method our result were good but it appears that diagonal roads were not detected correctly. This was because the majority of the images of the training set did not had diagonal lines. To correct this problem we randomly rotate the image after every training step. This allows us to have a better diagonal roads detection since the train set now included roads of different orientations, see Figure \ref{fig:diagonal}. However, rotating an image may leave some pixels outside the boundaries. We decided to label those pixels in the ground-truth with a different class, i.e. class 2 (ignore part). Those labels allowed us to ignore the respective pixel in the computation of the loss, which was properly modified, so that they have no impact on the training process.
 
 \begin{figure}[h]
@@ -200,12 +192,7 @@ We trained the network  batches of 4 images. Each image of the batch is a random
 
 \section{Results}
 \label{sec:results}
-\subsection{Traditional CNN}
-	The traditional CNN was trained for XXX epochs, each consisting of XXX batches of 4 images, on a NVIDIA GeForce GTX graphics card with 2 GB of VRAM.
-	\todo{change this, we can say we don't use the cross validation but precision-recall method => add to figure 9 the line representing the traditional cnn}
-	In order to compare different CNNs models we used 4-fold cross validation. Figure XX shows the estimated F1 scores of our main CNN models compared to the aforementioned three baselines and agrees with the F1 score obtained on Kaggle (XXX\%). Even without any preprocessing other than data augmentation our CNN outperformed the baselines and confirmed their superiority in solving this kind of tasks.
-\subsection{U-Net}
-	After 10000 iteration with a learning rate $\lambda = 10^{-3}$ we have obtained a accuracy of 93.35\% on the test set where the labels are unknown.
+	The traditional CNN was trained for 1000 epochs, each consisting of 25 batches of 4 images, on a NVIDIA GeForce GTX graphics card with 2 GB of VRAM, obtaining an F1 score of 83.3\%. While the U-Net was trained for 10000 iteration with a learning rate $\lambda = 10^{-3}$ which lead to an F1 score of 93.85\% on the test set submitted on Kaggle.
 	To compare different techniques we used the Precision Recall method (PR) which focuses on the relevance of the prediction on the labels of a test set. To compute the PR values we split the training dataset into two subsets, one used for training and one used to compute the PR curve. The latter is computed by gradually increasing the threshold (used to establish, given its probability, if a pixel is a road) to compute different PR values. In this way, we obtain the graph in Figure \ref{fig:pr}.
 	\begin{figure}[h]
 		\centering
@@ -213,10 +200,12 @@ We trained the network  batches of 4 images. Each image of the batch is a random
 		\caption{Precision and recall evolution regarding our different methods}
 		\label{fig:pr}
 	\end{figure}
-	We can observe in this plot three important things. Since the yellow curve is bellow every others, we can say that Unet is perfroming better than the traditional approahch. The second observation is that the green curve is above the red one. Thanks to this we can conclude that adding more hightway images and getting ride off the sea sides images was a good thing. The third observation is about the blue curve. We can see that in some cases the blue curve is above the green one. In fact when we are not rotating the image the network learn better how to detect verticals and horizontals lines but for the others the result is worst. That explains why the blue curve goes above the yellow one between 0.6 and 0.8 but overall the yellow is the one with the better results.
+	We can observe in this plot three important things: (1) the yellow curve is bellow every others, meaning that U-Net is performing better than the traditional approach, (2) the green curve is above the red one, i.e. adding more highway images and getting rid off the sea sides images improved the training, (3) in some cases the blue curve is above the green one. In fact, when we are not rotating any image, the network learns better how to detect verticals and horizontals lines but for the others the result is worst. That explains why the blue curve goes above the yellow one between 0.6 and 0.8. We can conclude that the yellow curve corresponds to the best model, that is the final model we used in the Kaggle competition.
 \section{Conclusion}
 \label{sec:conclusion}
-Both models proved to be versatile and effective in predicting correctly. However, our traditional CNN model failed in recognizing narrow roads, especially when they were covered by shadows, those types of roads are indeed almost inexistent in the training set while present in many images of the test set. Moreover, the train and test datasets were mainly restricted to cities. To obtain a model that would efficiently work with a wider range of input images, e.g. images with snow, country images or on different meteorological conditions, we would require a bigger and diverse training set.
+Both models proved to be versatile and effective in predicting correctly. However, our traditional CNN model failed in recognizing narrow roads, especially when they were covered by shadows, those types of roads are indeed almost inexistent in the training set while present in many images of the test set. Moreover, the train and test datasets were mainly restricted to cities. To obtain a model that would efficiently work with a wider range of input images, e.g. images with snow, country images or on different meteorological conditions, we would require a bigger and diverse training set. 
+
+Even without any preprocessing other than data augmentation both the models outperformed the baselines and confirmed their superiority in solving this kind of tasks.
 
 \bibliographystyle{IEEEtran}
 \bibliography{groupRoadSegmentationFault-literature}

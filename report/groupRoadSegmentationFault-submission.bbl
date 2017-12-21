@@ -38,4 +38,8 @@ D.~Pavllo, M.~Martinelliy, and C.~Hwang, ``Epfl machine learning project 2
   report road segmentation,'' 2016,
   https://github.com/dariopavllo/road-segmentationl.
 
+\bibitem{unet}
+O.~R. P. F.~T. Brox, ``U-net: Convolutional networks for biomedical image
+  segmentation,'' 2015, https://arxiv.org/abs/1505.04597.
+
 \end{thebibliography}
