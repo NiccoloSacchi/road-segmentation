@@ -23,7 +23,7 @@ The model has been trained on a GPU acceleration, with the following setup:
 - NVIDIA Titan X (with 12 GB of RAM)
 
 ### How to reproduce the predictions
-To generate the predictions, it is only necessary to run the script `run.py`. It won't train the model, instead it will just load the weights and produce the submission file.
+To generate the predictions, it is only necessary to run the script `run.py`. It won't train the model, instead it will just load the weights and produce the submission file. Since we have renamed some images you should use the dataset that you can find in the link.
 
 ### How to train
 To train the model from scratch run instead `train.py`. With our configuration the training took 3 hours.
