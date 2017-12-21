@@ -1,6 +1,6 @@
 Tp run the network use the command :
 
-python roadseg.py
+python run.py
 
 The results would be saved in the file : savedmodels_roadseg_cntr
 
