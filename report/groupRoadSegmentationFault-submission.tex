@@ -76,13 +76,13 @@ Therefore, we study solutions based on CNNs and we find two main approaches: (1)
 \end{figure}
 \begin{figure}[tbp]
 	\centering
-	\includegraphics[width=0.8\columnwidth]{img/missing.png}
+	\includegraphics[width=0.8\columnwidth]{img/featuremaps.jpg}
 	\caption{Activations of the first convolutional layer: with ReLU on the left and with Leaky ReLU on the right. As can be noticed the number of dead filter decreased sensibly meaning the model was learning more reasonable features.}
 	\vspace{-3mm}
 	\label{fig:dead-filters}
 \end{figure}
 
-We designed this CNN in such a way that it reduces each side of the input image by a factor equal to the width of the patch we want to predict in order to obtain an output mask of size $H/n*W/n$ where $n$ is the width of the patch. In particular, we observed better results when predicting patches of size $8x8$. The structure of our CNN is depicted in Figure \ref{fig:cnn-model}. Since we experienced some problems related to GPU memory filling (when using a NVIDIA GeForce GTX 660), we could only adopt convolutional layers of higher number of filters in deeper layers, i.e. after reducing the size of the input image. In this way, the first layers have bigger inputs and less filters while the last layers have smaller inputs but can have more filters \footnote{The output of a convolutional layer, when strides is $1x1$ and padding is used (which is our case), is $H x W x \#filters$ where $HxW$ is the size of the input.}.
+We designed this CNN in such a way that it reduces each side of the input image by a factor equal to the width of the patch we want to predict in order to obtain an output mask of size $H/nxW/n$ where $n$ is the width of the patch. In particular, we observed better results when predicting patches of size $8x8$. The structure of our CNN is depicted in Figure \ref{fig:cnn-model}. Since we experienced some problems related to GPU memory filling (when using a NVIDIA GeForce GTX 660), we could only adopt convolutional layers of higher number of filters in deeper layers, i.e. after reducing the size of the input image. In this way, the first layers have bigger inputs and less filters while the last layers have smaller inputs but can have more filters \footnote{The output of a convolutional layer, when strides is $1x1$ and padding is used (which is our case), is $H x W x \#filters$ where $HxW$ is the size of the input.}.
 
 The most common activation function used after convolutional layer is the ReLU activation. However, since we have experienced the problem of dead filters \footnote{Dead filters are filters that always output zero for any input. This may happen when, during training, the weights are updated in such a way that the neuron will never activate on any input again which lead to a gradient of zero and no update of the weights.}, we have switched to the Leaky ReLU, a variant of the ReLU which has a small positive gradient for negative inputs:
 $$f(x)=max(\alpha x, x)$$
@@ -187,7 +187,8 @@ Where $a_k(x)$ denotes the activation in feature channel $k$ at the pixel positi
  \label{fig:denoise-fourier}
 \end{figure}
 
-We trained the network  batches of 4 images. Each image of the batch is a randomly selected patch of size $384*384$ from the original image. Using this method our result were good but it appeared that diagonal roads were not detected correctly. This was because the majority of the images of the training set did not have diagonal lines. To rectify this problem we randomly rotate the image after each training step. This allows us to have a better diagonal roads detection since the train set now include roads with different orientations, as shown by Figure \ref{fig:diagonal}. However, rotating an image may leave some pixels outside the boundaries. We decided to label those pixels in the ground-truth with a different class, i.e. class 2 (ignore part). Those labels allowed us to ignore the respective pixel in the computation of the loss, which was properly modified, so that they have no impact on the training process.
+We trained the network  batches of 4 images. Each image of the batch is a randomly selected patch of size $384x384$ from the original image. Using this method our result were good but it appeared that diagonal roads were not detected correctly. This was because the majority of the images of the training set did not have diagonal lines. To rectify this problem we randomly rotate the image after each training step. This allows us to have a better diagonal roads detection since the train set now include roads with different orientations, as shown by Figure \ref{fig:diagonal}. However, rotating an image may leave some pixels outside the boundaries. We decided to label those pixels in the ground-truth with a different class, i.e. class 2 (ignore part). Those labels allowed us to ignore the respective pixel in the computation of the loss, which was properly modified, so that they have no impact on the training process.
+
 
 \begin{figure}[h]
  \centering
@@ -200,6 +201,7 @@ We trained the network  batches of 4 images. Each image of the batch is a random
 
 \section{Results}
 \label{sec:results}
+
 \subsection{Traditional CNN}
 	The traditional CNN was trained for 1000 epochs, each consisting of 25 batches of 4 images, on a NVIDIA GeForce GTX graphics card with 2 GB of VRAM.
 	\todo{change this, we can say we don't use the cross validation but precision-recall method => add to figure 9 the line representing the traditional cnn}
@@ -207,6 +209,7 @@ We trained the network  batches of 4 images. Each image of the batch is a random
 \subsection{U-Net}
 	After 10000 iteration with a learning rate $\lambda = 10^{-3}$ we have obtained a accuracy of 93.35\% on the test set where the labels are unknown.
 	To compare different techniques we used the Precision Recall method (PR) which focuses on the relevance of the prediction on the labels of a test set. To compute the PR values we split the training dataset into two subsets, one used for training and one used to compute the PR curve. The latter is computed by gradually increasing the threshold (used to establish, given its probability, if a pixel is a road) to compute different PR values. By doing so, we obtain the graph in Figure \ref{fig:pr}.
+
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.8\columnwidth]{img/pr_curve.png}
@@ -214,10 +217,12 @@ We trained the network  batches of 4 images. Each image of the batch is a random
 		\label{fig:pr}
 	\end{figure}
 	
-	We can observe three important things in this plot . Since the yellow curve is below every others, we can say that Unet is perfroming better than the traditional approach. The second observation is that the green curve is above the red one. Considering this we can conclude that adding more hightway images and getting ride off the seaside images was a good thing. The third observation is about the blue curve. We can see that in some cases the blue curve is above the green one. In fact when we are not rotating the image the network learns better how to detect vertical and horizontal lines but the results are worse when predicting the others. That explains why the blue curve goes above the yellow one between 0.6 and 0.8 and why the yellow one the best results overall.
+	We can observe three important things in this plot . Since the yellow curve is below every others, we can say that Unet is perfroming better than the traditional approach. The second observation is that the green curve is above the red one. Considering this we can conclude that adding more hightway images and getting ride off the seaside images was a good thing. The third observation is about the blue curve. We can see that in some cases the blue curve is above the green one. In fact when we are not rotating the image the network learns better how to detect vertical and horizontal lines but the results are worse when predicting the others. That explains why the blue curve goes above the yellow one between 0.6 and 0.8. We concluded that the yellow curve corresponds to the best model and therefore the one we used for the Kaggle competition.
+	
 \section{Conclusion}
 \label{sec:conclusion}
-Both models proved to be versatile and effective in achieving good predictions. However, our traditional CNN model failed in recognizing narrow roads, especially when they are covered by shadows, those types of roads are indeed almost inexistent in the training set while present in many images of the test set. Moreover, the train and test datasets were mainly restricted to cities. To obtain a model that would efficiently work with a wider range of input images such as images with snow, country images or on different meteorological conditions, we would require a bigger and diverse training set.
+Both models proved to be versatile and effective in achieving good predictions. However, our traditional CNN model failed in recognizing narrow roads, especially when they are covered by shadows, those types of roads are indeed almost inexistent in the training set while present in many images of the test set. Moreover, the train and test datasets were mainly restricted to cities. To obtain a model that would efficiently work with a wider range of input images such as images with snow, country images or on different meteorological conditions, we would require a bigger and diverse training set. In addition, without any preprocessing other than data augmentation, both models outperformed the baselines and confirmed their superiority in solving this kind of problem.
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{groupRoadSegmentationFault-literature}
