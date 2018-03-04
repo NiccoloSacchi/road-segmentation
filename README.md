@@ -1,5 +1,5 @@
 ﻿# Road Segmentation with Convolutional Neural Networks
-##### Théo Deprelle, Valentin Nigolian, Niccolo Sacchi
+##### Niccolò Sacchi, Théo Deprelle, Valentin Nigolian
 This project is part of the course "Pattern Classification and Machine Learning" taught at EPFL in 2017. It presents a technique for segmenting satellite images by using convolutional neural networks (CNNs).
 
 Our team obtained an F1 score of 93.85% on Kaggle. The model and the techniques used are explained in `groupRoadSegmentationFault-submission.pdf`.

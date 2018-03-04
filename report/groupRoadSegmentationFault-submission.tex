@@ -181,15 +181,6 @@ Where $a_k(x)$ denotes the activation in feature channel $k$ at the pixel positi
 
 \subsubsection*{Data augmentation}
 
-
-\begin{figure}[h]
- \centering
- \includegraphics[width=0.7\columnwidth]{img/dataaug.png}
- \caption{Training step diagram.}
- \vspace{-3mm}
- \label{fig:denoise-fourier}
-\end{figure}
-
 We trained the network  batches of 4 images. Each image of the batch is a randomly selected patch of size $384*384$ from the original image. Using this method our result were good but it appeared that diagonal roads were not detected correctly. This was because the majority of the images of the training set did not have diagonal lines. To rectify this problem we randomly rotate the image after each training step. This allows us to have a better diagonal roads detection since the train set now include roads with different orientations, as shown by Figure \ref{fig:diagonal}. However, rotating an image may leave some pixels outside the boundaries. We decided to label those pixels in the ground-truth with a different class, i.e. class 2 (ignore part). Those labels allowed us to ignore the respective pixel in the computation of the loss, which was properly modified, so that they have no impact on the training process.
 
 
