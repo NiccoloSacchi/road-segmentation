@@ -36,3 +36,6 @@ To train the model from scratch run instead `train.py`. With our configuration t
 - `trainer.py`        : train the network
 - `transformation.py` : preprocessing and data augmentation
 - `utils.py`          : utility functions
+
+### Report
+[Report](https://github.com/NiccoloSacchi/road-segmentation/blob/master/report/groupRoadSegmentationFault-submission.pdf)
