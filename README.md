@@ -38,4 +38,4 @@ To train the model from scratch run instead `train.py`. With our configuration t
 - `utils.py`          : utility functions
 
 ### Report
-[Report](https://github.com/NiccoloSacchi/road-segmentation/blob/master/report/groupRoadSegmentationFault-submission.pdf)
+For a detailed description of the implemented solution please refer to the [Report](https://github.com/NiccoloSacchi/road-segmentation/blob/master/report/groupRoadSegmentationFault-submission.pdf).
